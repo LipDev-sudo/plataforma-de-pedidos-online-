@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useState } from "react";
 import { Search, Star, Clock, ChevronRight, MapPin, Flame } from "lucide-react";
 import { categories, getFeaturedItems, menuItems } from "../data/menu-data";
 import { useCart } from "../context/CartContext";
@@ -6,8 +7,21 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { motion } from "motion/react";
 
 export function HomePage() {
+  const [searchQuery, setSearchQuery] = useState("");
   const featured = getFeaturedItems();
   const popular = menuItems.filter((i) => i.rating >= 4.7).slice(0, 6);
+  const searchResults = menuItems
+    .filter((item) => {
+      const query = searchQuery.trim().toLowerCase();
+      if (!query) return false;
+
+      return (
+        item.name.toLowerCase().includes(query) ||
+        item.description.toLowerCase().includes(query) ||
+        item.category.toLowerCase().includes(query)
+      );
+    })
+    .slice(0, 5);
   const { addItem } = useCart();
 
   return (
@@ -56,11 +70,69 @@ export function HomePage() {
             <input
               type="text"
               placeholder="Buscar pratos, restaurantes..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
               className="w-full bg-[#1A1A1A] rounded-2xl pl-11 pr-4 py-3.5 text-[14px] text-foreground placeholder:text-[#6B6B6B] border border-white/[0.06] focus:border-primary/40 focus:outline-none focus:shadow-[0_0_12px_rgba(234,29,44,0.15)] transition-all"
             />
           </div>
         </div>
       </div>
+
+      {searchQuery.trim().length > 0 && (
+        <div className="px-4 mt-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-[18px] text-white">Resultados da busca</h2>
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="text-primary text-[13px]"
+            >
+              Limpar
+            </button>
+          </div>
+          <div className="space-y-3">
+            {searchResults.length > 0 ? (
+              searchResults.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex gap-3 bg-[#1A1A1A] rounded-2xl overflow-hidden border border-primary/20 p-3 shadow-[0_0_18px_rgba(234,29,44,0.08)]"
+                >
+                  <Link to={`/item/${item.id}`} className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-white/[0.06]">
+                    <ImageWithFallback
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </Link>
+                  <div className="flex-1 min-w-0">
+                    <Link to={`/item/${item.id}`} className="text-[14px] truncate text-foreground block">
+                      {item.name}
+                    </Link>
+                    <p className="text-[12px] text-[#6B6B6B] line-clamp-2 mt-0.5">
+                      {item.description}
+                    </p>
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-primary font-semibold">
+                        R$ {item.price.toFixed(2).replace(".", ",")}
+                      </span>
+                      <button
+                        onClick={() => addItem(item, 1, {}, 0)}
+                        className="rounded-full bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground shadow-lg shadow-primary/25"
+                      >
+                        Adicionar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-white/[0.06] bg-[#1A1A1A] p-4 text-[13px] text-[#8A8A8A]">
+                Nenhum prato encontrado. Tente buscar por pizza, burger, sushi ou sobremesa.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Categories */}
       <div className="px-4 mt-6">

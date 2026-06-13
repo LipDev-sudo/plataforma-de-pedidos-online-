@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import type { MenuItem } from "../data/menu-data";
 
 export interface CartItem {
@@ -31,10 +31,22 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+const CART_STORAGE_KEY = "lipdev-pedidos-cart";
+const ORDERS_STORAGE_KEY = "lipdev-pedidos-orders";
+
+function loadFromStorage<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+
+  try {
+    const stored = window.localStorage.getItem(key);
+    return stored ? (JSON.parse(stored) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [orders, setOrders] = useState<Order[]>([
+  const defaultOrders: Order[] = [
     {
       id: "ORD-2024001",
       items: [],
@@ -51,7 +63,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       status: "entregue",
       address: "Av. Paulista, 1000",
     },
-  ]);
+  ];
+
+  const [items, setItems] = useState<CartItem[]>(() =>
+    loadFromStorage<CartItem[]>(CART_STORAGE_KEY, [])
+  );
+  const [orders, setOrders] = useState<Order[]>(() =>
+    loadFromStorage<Order[]>(ORDERS_STORAGE_KEY, defaultOrders)
+  );
+
+  useEffect(() => {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
+
+  useEffect(() => {
+    window.localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+  }, [orders]);
 
   const addItem = useCallback((item: MenuItem, quantity: number, customizations: Record<string, string>, extraPrice: number) => {
     const cartId = `${item.id}-${Date.now()}`;
