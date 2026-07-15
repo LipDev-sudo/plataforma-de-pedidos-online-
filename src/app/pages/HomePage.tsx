@@ -35,17 +35,17 @@ export function HomePage() {
           {/* Top bar */}
           <div className="flex items-center justify-between mb-5">
             <div>
-              <div className="flex items-center gap-1.5 text-[#6B6B6B] text-[12px] mb-0.5">
+              <div className="flex items-center gap-1.5 text-[#9A9A9A] text-[12px] mb-0.5">
                 <MapPin className="w-3.5 h-3.5 text-primary" />
                 <span>Entregar em</span>
               </div>
               <p className="text-foreground text-[15px] font-medium">
-                Rua das Flores, 123
-                <ChevronRight className="w-4 h-4 inline ml-0.5 text-[#6B6B6B]" />
+                Defina no checkout
+                <ChevronRight className="w-4 h-4 inline ml-0.5 text-[#9A9A9A]" />
               </p>
             </div>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-[#FF6B35] flex items-center justify-center text-white shadow-lg shadow-primary/25">
-              <span className="text-[14px] font-bold">JM</span>
+              <span className="text-[14px] font-bold">FD</span>
             </div>
           </div>
 
@@ -59,20 +59,20 @@ export function HomePage() {
               O que vamos <br />
               pedir <span className="text-gradient">hoje</span>?
             </h1>
-            <p className="text-[#6B6B6B] text-[14px] mb-4">
+            <p className="text-[#9A9A9A] text-[14px] mb-4">
               Descubra sabores incriveis perto de voce
             </p>
           </motion.div>
 
           {/* Search bar */}
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#6B6B6B]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#9A9A9A]" />
             <input
               type="text"
               placeholder="Buscar pratos, restaurantes..."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              className="w-full bg-[#1A1A1A] rounded-2xl pl-11 pr-4 py-3.5 text-[14px] text-foreground placeholder:text-[#6B6B6B] border border-white/[0.06] focus:border-primary/40 focus:outline-none focus:shadow-[0_0_12px_rgba(234,29,44,0.15)] transition-all"
+              className="w-full bg-[#1A1A1A] rounded-2xl pl-11 pr-4 py-3.5 text-[14px] text-foreground placeholder:text-[#9A9A9A] border border-white/[0.06] focus:border-primary/40 focus:outline-none focus:shadow-[0_0_12px_rgba(234,29,44,0.15)] transition-all"
             />
           </div>
         </div>
@@ -108,7 +108,7 @@ export function HomePage() {
                     <Link to={`/item/${item.id}`} className="text-[14px] truncate text-foreground block">
                       {item.name}
                     </Link>
-                    <p className="text-[12px] text-[#6B6B6B] line-clamp-2 mt-0.5">
+                    <p className="text-[12px] text-[#9A9A9A] line-clamp-2 mt-0.5">
                       {item.description}
                     </p>
                     <div className="flex items-center justify-between mt-2">
@@ -117,6 +117,7 @@ export function HomePage() {
                       </span>
                       <button
                         onClick={() => addItem(item, 1, {}, 0)}
+                        aria-label={`Adicionar ${item.name} ao carrinho`}
                         className="rounded-full bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground shadow-lg shadow-primary/25"
                       >
                         Adicionar
@@ -235,8 +236,8 @@ export function HomePage() {
                     <Star className="w-3.5 h-3.5 fill-accent text-accent" />
                     <span className="text-[12px] text-accent font-medium">{item.rating}</span>
                     <span className="text-[12px] text-[#4A4A4A] mx-1">&middot;</span>
-                    <Clock className="w-3 h-3 text-[#6B6B6B]" />
-                    <span className="text-[11px] text-[#6B6B6B]">{item.prepTime}</span>
+                    <Clock className="w-3 h-3 text-[#9A9A9A]" />
+                    <span className="text-[11px] text-[#9A9A9A]">{item.prepTime}</span>
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <span className="text-primary font-semibold text-[14px]">
@@ -247,6 +248,7 @@ export function HomePage() {
                         e.preventDefault();
                         addItem(item, 1, {}, 0);
                       }}
+                      aria-label={`Adicionar ${item.name} ao carrinho`}
                       className="w-7 h-7 rounded-full bg-primary hover:bg-primary/80 text-primary-foreground flex items-center justify-center text-[18px] transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40"
                     >
                       +
@@ -286,7 +288,7 @@ export function HomePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-[14px] truncate text-foreground">{item.name}</h4>
-                  <p className="text-[12px] text-[#6B6B6B] line-clamp-2 mt-0.5">
+                  <p className="text-[12px] text-[#9A9A9A] line-clamp-2 mt-0.5">
                     {item.description}
                   </p>
                   <div className="flex items-center justify-between mt-2">

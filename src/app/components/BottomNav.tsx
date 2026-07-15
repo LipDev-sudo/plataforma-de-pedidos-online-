@@ -1,4 +1,4 @@
-import { Home, Search, ShoppingCart, ClipboardList, User } from "lucide-react";
+import { Home, Search, ShoppingCart, ClipboardList } from "lucide-react";
 import { NavLink } from "react-router";
 import { useCart } from "../context/CartContext";
 
@@ -7,7 +7,6 @@ const navItems = [
   { to: "/menu", icon: Search, label: "Buscar" },
   { to: "/cart", icon: ShoppingCart, label: "Carrinho" },
   { to: "/orders", icon: ClipboardList, label: "Pedidos" },
-  { to: "#", icon: User, label: "Perfil" },
 ];
 
 export function BottomNav() {
@@ -16,7 +15,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-white/[0.06]">
-      <div className="max-w-lg mx-auto flex items-center justify-around py-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <div className="max-w-3xl mx-auto flex items-center justify-around py-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         {navItems.map((nav) => (
           <NavLink
             key={nav.to + nav.label}
@@ -26,7 +25,7 @@ export function BottomNav() {
               `flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all duration-200 relative ${
                 isActive
                   ? "text-primary"
-                  : "text-[#6B6B6B] hover:text-foreground/70"
+                  : "text-[#9A9A9A] hover:text-foreground/70"
               }`
             }
           >
