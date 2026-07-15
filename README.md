@@ -1,67 +1,75 @@
 # Plataforma de Pedidos Online
 
-Sistema de pedidos online para restaurantes e pequenos negocios, com cardapio digital, carrinho e fluxo mobile-first.
+Demonstração mobile-first de um fluxo de pedidos para restaurantes: cardápio, personalização do item, carrinho, checkout, confirmação e acompanhamento. Nenhum pedido ou pagamento real é processado.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-00D4FF?style=for-the-badge)](https://plataforma-de-pedidos-online-two.vercel.app/)
-[![Portfolio](https://img.shields.io/badge/Portfolio-LipDev.BR-BEF264?style=for-the-badge)](https://lipdev.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-LipDev--sudo-181717?style=for-the-badge&logo=github)](https://github.com/LipDev-sudo)
+[Abrir demonstração](https://plataforma-de-pedidos-online-two.vercel.app/) · [Ver portfólio](https://lipdev.vercel.app/)
 
-## Visao do projeto
+![Página inicial em desktop](docs/screenshots/pedidos-desktop.png)
 
-Projeto criado para simular uma experiencia de delivery simples, rapida e direta para negocios locais.
+## Fluxo demonstrado
 
-## Demo
+1. explore ou pesquise itens no cardápio;
+2. escolha adicionais e quantidade;
+3. revise o carrinho e a taxa de entrega;
+4. informe um endereço fictício e selecione a forma de pagamento;
+5. confirme o pedido simulado;
+6. acompanhe os estados `Preparando`, `A caminho` e `Entregue`;
+7. repita um pedido concluído.
 
-- Aplicacao online: https://plataforma-de-pedidos-online-two.vercel.app/
-- Portfolio principal: https://lipdev.vercel.app/
+Carrinho, pedidos e andamento são persistidos no `localStorage`. Os dados ficam apenas no navegador e podem ser removidos limpando os dados do site.
 
-## Destaques
+![Acompanhamento do pedido simulado](docs/screenshots/pedidos-acompanhamento.png)
 
-- Cardapio digital com navegacao clara
-- Fluxo de pedido com carrinho visual
-- Layout mobile-first para clientes no celular
-- Estrutura facil de adaptar para WhatsApp ou checkout
-- Boa base para evoluir para painel administrativo e status de pedidos
+## Tecnologias
 
-## Stack
+- React 18;
+- TypeScript;
+- Vite 6;
+- React Router 7;
+- Tailwind CSS 4;
+- Motion e Lucide React;
+- Playwright, ESLint e GitHub Actions.
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
+## Executar localmente
 
-## Como rodar localmente
+Requisitos: Node.js 22 e npm.
 
 ```bash
-npm install
+git clone https://github.com/LipDev-sudo/plataforma-de-pedidos-online-.git
+cd plataforma-de-pedidos-online-
+npm ci
 npm run dev
 ```
 
-Para gerar uma build de producao:
+## Verificações
 
 ```bash
+npm run lint
+npm run typecheck
 npm run build
-npm run preview
+npx playwright install chromium
+npm test
 ```
 
-## Estrutura de evolucao
+Os testes percorrem o pedido completo em `1440x900` e `390x844`, validando persistência, mudança de status, repetição do pedido, foco do teclado, links e overflow horizontal.
 
-Este projeto pode evoluir com:
+## Screenshots
 
-- Integracao com API real
-- Painel administrativo
-- Autenticacao de usuarios
-- Checkout ou integracao com WhatsApp
-- Banco de dados para produtos, pedidos e clientes
+| Desktop | Mobile |
+| --- | --- |
+| ![Desktop](docs/screenshots/pedidos-desktop.png) | ![Mobile](docs/screenshots/pedidos-mobile.png) |
+
+## Limites da demonstração
+
+- não há autenticação, API, banco de dados ou painel administrativo;
+- pagamentos são apenas opções visuais;
+- estoque, entrega e mudança de status são simulados localmente;
+- imagens do cardápio são carregadas de fontes externas.
 
 ## Autor
 
-Desenvolvido por **Hamilton Felipe Soares da Silva** - LipDev.BR.
+Hamilton Felipe Soares da Silva · [GitHub](https://github.com/LipDev-sudo) · [LinkedIn](https://www.linkedin.com/in/hamilton-felipe-875054383/)
 
-- Portfolio: https://lipdev.vercel.app/
-- GitHub: https://github.com/LipDev-sudo
-- LinkedIn: https://www.linkedin.com/in/hamilton-felipe-875054383/
+## Licença
 
-## Licenca
-
-Este projeto esta sob a licenca MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Distribuído sob a [licença MIT](LICENSE).
