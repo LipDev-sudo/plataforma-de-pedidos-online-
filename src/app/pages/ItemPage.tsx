@@ -18,7 +18,7 @@ export function ItemPage() {
   if (!item) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-[#6B6B6B]">Item nao encontrado</p>
+        <p className="text-[#9A9A9A]">Item nao encontrado</p>
       </div>
     );
   }
@@ -52,6 +52,7 @@ export function ItemPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/20 to-transparent" />
         <button
           onClick={() => navigate(-1)}
+          aria-label="Voltar"
           className="absolute top-4 left-4 w-10 h-10 rounded-full bg-[#0D0D0D]/70 backdrop-blur-sm flex items-center justify-center border border-white/[0.1]"
         >
           <ArrowLeft className="w-5 h-5 text-white" />
@@ -70,7 +71,7 @@ export function ItemPage() {
                   <span className="text-[14px] text-[#8A8A8A]">{item.rating}</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4 text-[#6B6B6B]" />
+                  <Clock className="w-4 h-4 text-[#9A9A9A]" />
                   <span className="text-[14px] text-[#8A8A8A]">{item.prepTime}</span>
                 </div>
               </div>
@@ -134,6 +135,7 @@ export function ItemPage() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              aria-label="Diminuir quantidade"
               className="w-10 h-10 rounded-xl bg-[#252525] flex items-center justify-center text-foreground border border-white/[0.06] hover:bg-[#333] transition-colors"
             >
               <Minus className="w-4 h-4" />
@@ -141,6 +143,7 @@ export function ItemPage() {
             <span className="text-[20px] w-8 text-center text-foreground">{quantity}</span>
             <button
               onClick={() => setQuantity(quantity + 1)}
+              aria-label="Aumentar quantidade"
               className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25"
             >
               <Plus className="w-4 h-4" />
@@ -150,8 +153,8 @@ export function ItemPage() {
       </div>
 
       {/* Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-white/[0.06] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <div className="max-w-lg mx-auto">
+      <div className="fixed bottom-16 left-0 right-0 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-white/[0.06] p-4">
+        <div className="max-w-3xl mx-auto">
           <button
             onClick={handleAddToCart}
             className="w-full bg-primary text-primary-foreground py-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"

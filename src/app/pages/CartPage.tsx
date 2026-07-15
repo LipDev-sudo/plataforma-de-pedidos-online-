@@ -16,7 +16,7 @@ export function CartPage() {
           <ShoppingBag className="w-10 h-10 text-primary drop-shadow-[0_0_8px_rgba(234,29,44,0.4)]" />
         </div>
         <h2 className="mb-2 text-white">Carrinho vazio</h2>
-        <p className="text-[#6B6B6B] text-center text-[14px] mb-6">
+        <p className="text-[#9A9A9A] text-center text-[14px] mb-6">
           Adicione itens deliciosos do nosso cardapio!
         </p>
         <button
@@ -62,13 +62,14 @@ export function CartPage() {
                 <h4 className="text-[14px] truncate pr-2 text-foreground">{cartItem.item.name}</h4>
                 <button
                   onClick={() => removeItem(cartItem.cartId)}
-                  className="text-[#6B6B6B] p-1 hover:text-destructive transition-colors"
+                  aria-label={`Remover ${cartItem.item.name} do carrinho`}
+                  className="text-[#9A9A9A] p-1 hover:text-destructive transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
               {Object.entries(cartItem.customizations).length > 0 && (
-                <p className="text-[11px] text-[#6B6B6B] mt-0.5 truncate">
+                <p className="text-[11px] text-[#9A9A9A] mt-0.5 truncate">
                   {Object.values(cartItem.customizations).join(", ")}
                 </p>
               )}
@@ -79,6 +80,7 @@ export function CartPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => updateQuantity(cartItem.cartId, cartItem.quantity - 1)}
+                    aria-label={`Diminuir quantidade de ${cartItem.item.name}`}
                     className="w-7 h-7 rounded-lg bg-[#252525] flex items-center justify-center text-foreground hover:bg-[#333] transition-colors border border-white/[0.06]"
                   >
                     <Minus className="w-3.5 h-3.5" />
@@ -86,6 +88,7 @@ export function CartPage() {
                   <span className="text-[14px] w-5 text-center text-foreground">{cartItem.quantity}</span>
                   <button
                     onClick={() => updateQuantity(cartItem.cartId, cartItem.quantity + 1)}
+                    aria-label={`Aumentar quantidade de ${cartItem.item.name}`}
                     className="w-7 h-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/20"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -99,14 +102,14 @@ export function CartPage() {
 
       {/* Summary */}
       <div className="fixed bottom-16 left-0 right-0 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-white/[0.06] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-3xl mx-auto">
           <div className="space-y-2 mb-3">
             <div className="flex justify-between text-[14px]">
-              <span className="text-[#6B6B6B]">Subtotal</span>
+              <span className="text-[#9A9A9A]">Subtotal</span>
               <span className="text-foreground">R$ {total.toFixed(2).replace(".", ",")}</span>
             </div>
             <div className="flex justify-between text-[14px]">
-              <span className="text-[#6B6B6B]">Taxa de entrega</span>
+              <span className="text-[#9A9A9A]">Taxa de entrega</span>
               <span className={deliveryFee === 0 ? "text-success neon-success" : "text-foreground"}>
                 {deliveryFee === 0 ? "Gratis" : `R$ ${deliveryFee.toFixed(2).replace(".", ",")}`}
               </span>

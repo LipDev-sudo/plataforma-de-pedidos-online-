@@ -21,8 +21,17 @@ const statusConfig = {
 };
 
 export function OrderHistoryPage() {
-  const { orders } = useCart();
+  const { orders, advanceOrderStatus, repeatOrder } = useCart();
   const navigate = useNavigate();
+
+  const handleOrderAction = (orderId: string, status: keyof typeof statusConfig) => {
+    if (status === "entregue") {
+      repeatOrder(orderId);
+      navigate("/cart");
+      return;
+    }
+    advanceOrderStatus(orderId);
+  };
 
   if (orders.length === 0) {
     return (
@@ -31,7 +40,7 @@ export function OrderHistoryPage() {
           <Package className="w-10 h-10 text-primary drop-shadow-[0_0_8px_rgba(234,29,44,0.4)]" />
         </div>
         <h2 className="mb-2 text-white">Nenhum pedido</h2>
-        <p className="text-[#6B6B6B] text-center text-[14px] mb-6">
+        <p className="text-[#9A9A9A] text-center text-[14px] mb-6">
           Seus pedidos aparecerao aqui apos sua primeira compra.
         </p>
         <button
@@ -48,7 +57,7 @@ export function OrderHistoryPage() {
     <div className="pb-24">
       <div className="px-4 pt-6 pb-4">
         <h1 className="text-white">Meus Pedidos</h1>
-        <p className="text-[#6B6B6B] text-[14px] mt-1">
+        <p className="text-[#9A9A9A] text-[14px] mt-1">
           {orders.length} {orders.length === 1 ? "pedido" : "pedidos"}
         </p>
       </div>
@@ -58,14 +67,14 @@ export function OrderHistoryPage() {
           const config = statusConfig[order.status];
           const StatusIcon = config.icon;
           return (
-            <div
+            <article
               key={order.id}
               className="bg-[#1A1A1A] rounded-2xl border border-white/[0.06] p-4"
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <p className="text-[13px] text-[#8A8A8A]">{order.id}</p>
-                  <p className="text-[12px] text-[#6B6B6B] mt-0.5">
+                  <p className="text-[12px] text-[#9A9A9A] mt-0.5">
                     {order.date}
                   </p>
                 </div>
@@ -80,7 +89,7 @@ export function OrderHistoryPage() {
               {order.items.length > 0 && (
                 <div className="border-t border-white/[0.06] pt-2 mb-2">
                   {order.items.map((ci) => (
-                    <p key={ci.cartId} className="text-[13px] text-[#6B6B6B]">
+                    <p key={ci.cartId} className="text-[13px] text-[#9A9A9A]">
                       {ci.quantity}x {ci.item.name}
                     </p>
                   ))}
@@ -89,26 +98,26 @@ export function OrderHistoryPage() {
 
               <div className="flex items-center justify-between border-t border-white/[0.06] pt-3">
                 <div>
-                  <p className="text-[12px] text-[#6B6B6B]">{order.address}</p>
+                  <p className="text-[12px] text-[#9A9A9A]">{order.address}</p>
+                  <p className="mt-0.5 text-[11px] text-[#555]">
+                    Pagamento: {order.paymentMethod === "pix" ? "Pix" : order.paymentMethod}
+                  </p>
                   <p className="text-primary mt-0.5 font-semibold">
                     R$ {order.total.toFixed(2).replace(".", ",")}
                   </p>
                 </div>
-                {order.status === "preparando" && (
-                  <div className="flex items-center gap-1 text-primary text-[13px]">
-                    Acompanhar <ChevronRight className="w-4 h-4" />
-                  </div>
-                )}
-                {order.status === "entregue" && (
-                  <button
-                    onClick={() => navigate("/menu")}
-                    className="text-primary text-[13px] flex items-center gap-1 hover:gap-2 transition-all"
-                  >
-                    Pedir novamente <ChevronRight className="w-4 h-4" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => handleOrderAction(order.id, order.status)}
+                  className="flex items-center gap-1 rounded-xl px-2 py-2 text-right text-[12px] font-semibold text-primary transition hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {order.status === "preparando" && "Simular saída"}
+                  {order.status === "a caminho" && "Simular entrega"}
+                  {order.status === "entregue" && "Pedir novamente"}
+                  <ChevronRight className="w-4 h-4 shrink-0" />
+                </button>
               </div>
-            </div>
+            </article>
           );
         })}
       </div>
