@@ -1,309 +1,277 @@
-import { Link } from "react-router";
+import {
+  Bike,
+  CakeSlice,
+  ChevronRight,
+  Clock3,
+  CupSoda,
+  MapPin,
+  Pizza,
+  Plus,
+  Search,
+  ShoppingBag,
+  Wheat,
+} from "lucide-react";
 import { useState } from "react";
-import { Search, Star, Clock, ChevronRight, MapPin, Flame } from "lucide-react";
-import { categories, getFeaturedItems, menuItems } from "../data/menu-data";
+import { Link } from "react-router";
 import { useCart } from "../context/CartContext";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { motion } from "motion/react";
+import {
+  categories,
+  getFeaturedItems,
+  menuItems,
+  type Category,
+  type MenuItem,
+} from "../data/menu-data";
+import { ImageWithFallback } from "../components/ImageWithFallback";
 
-export function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const featured = getFeaturedItems();
-  const popular = menuItems.filter((i) => i.rating >= 4.7).slice(0, 6);
-  const searchResults = menuItems
-    .filter((item) => {
-      const query = searchQuery.trim().toLowerCase();
-      if (!query) return false;
+const categoryIcons = {
+  pizzas: Pizza,
+  entradas: Wheat,
+  sobremesas: CakeSlice,
+  bebidas: CupSoda,
+};
 
-      return (
-        item.name.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query)
-      );
-    })
-    .slice(0, 5);
-  const { addItem } = useCart();
+const formatCurrency = (value: number) =>
+  value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+function CategoryLink({ category }: { category: Category }) {
+  const Icon = categoryIcons[category.id];
 
   return (
-    <div className="pb-24">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0D0D0D] via-[#150808] to-[#0D0D0D]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(234,29,44,0.12),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(0,212,126,0.05),transparent_50%)]" />
-        <div className="relative px-4 pt-6 pb-8">
-          {/* Top bar */}
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <div className="flex items-center gap-1.5 text-[#9A9A9A] text-[12px] mb-0.5">
-                <MapPin className="w-3.5 h-3.5 text-primary" />
-                <span>Entregar em</span>
-              </div>
-              <p className="text-foreground text-[15px] font-medium">
-                Defina no checkout
-                <ChevronRight className="w-4 h-4 inline ml-0.5 text-[#9A9A9A]" />
-              </p>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-[#FF6B35] flex items-center justify-center text-white shadow-lg shadow-primary/25">
-              <span className="text-[14px] font-bold">FD</span>
-            </div>
-          </div>
+    <Link
+      to={`/menu?category=${category.id}`}
+      className="group flex min-w-[76px] flex-col items-center gap-2 border-b-2 border-transparent px-2 py-3 text-xs font-semibold text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary sm:min-w-[112px] sm:flex-row sm:justify-center"
+    >
+      <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+      {category.name}
+    </Link>
+  );
+}
 
-          {/* Hero text */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+function MenuRow({
+  item,
+  onAdd,
+}: {
+  item: MenuItem;
+  onAdd: (item: MenuItem) => void;
+}) {
+  return (
+    <article className="product-row flex gap-3 border-b border-border py-4 last:border-b-0 sm:gap-5">
+      <Link
+        to={`/item/${item.id}`}
+        className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-secondary sm:h-28 sm:w-40"
+      >
+        <ImageWithFallback
+          src={item.image}
+          alt={item.name}
+          className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+        />
+      </Link>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex items-start justify-between gap-3">
+          <Link to={`/item/${item.id}`} className="min-w-0">
+            <h3 className="text-sm sm:text-base">{item.name}</h3>
+          </Link>
+          <p className="shrink-0 text-sm font-bold">{formatCurrency(item.price)}</p>
+        </div>
+        <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+          {item.description}
+        </p>
+        <div className="mt-auto flex items-end justify-between gap-3 pt-2">
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground">
+            <Clock3 className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+            {item.prepTime}
+          </span>
+          <button
+            type="button"
+            onClick={() => onAdd(item)}
+            aria-label={`Adicionar ${item.name} ao carrinho`}
+            className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-xl border border-primary px-3 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-white"
           >
-            <h1 className="text-[28px] leading-tight mb-1 text-white">
-              O que vamos <br />
-              pedir <span className="text-gradient">hoje</span>?
-            </h1>
-            <p className="text-[#9A9A9A] text-[14px] mb-4">
-              Descubra sabores incriveis perto de voce
-            </p>
-          </motion.div>
-
-          {/* Search bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-[#9A9A9A]" />
-            <input
-              type="text"
-              placeholder="Buscar pratos, restaurantes..."
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              className="w-full bg-[#1A1A1A] rounded-2xl pl-11 pr-4 py-3.5 text-[14px] text-foreground placeholder:text-[#9A9A9A] border border-white/[0.06] focus:border-primary/40 focus:outline-none focus:shadow-[0_0_12px_rgba(234,29,44,0.15)] transition-all"
-            />
-          </div>
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Adicionar</span>
+          </button>
         </div>
       </div>
+    </article>
+  );
+}
 
-      {searchQuery.trim().length > 0 && (
-        <div className="px-4 mt-6">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-[18px] text-white">Resultados da busca</h2>
-            <button
-              type="button"
-              onClick={() => setSearchQuery("")}
-              className="text-primary text-[13px]"
-            >
-              Limpar
-            </button>
-          </div>
-          <div className="space-y-3">
-            {searchResults.length > 0 ? (
-              searchResults.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex gap-3 bg-[#1A1A1A] rounded-2xl overflow-hidden border border-primary/20 p-3 shadow-[0_0_18px_rgba(234,29,44,0.08)]"
-                >
-                  <Link to={`/item/${item.id}`} className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-white/[0.06]">
-                    <ImageWithFallback
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </Link>
-                  <div className="flex-1 min-w-0">
-                    <Link to={`/item/${item.id}`} className="text-[14px] truncate text-foreground block">
-                      {item.name}
-                    </Link>
-                    <p className="text-[12px] text-[#9A9A9A] line-clamp-2 mt-0.5">
-                      {item.description}
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-primary font-semibold">
-                        R$ {item.price.toFixed(2).replace(".", ",")}
-                      </span>
-                      <button
-                        onClick={() => addItem(item, 1, {}, 0)}
-                        aria-label={`Adicionar ${item.name} ao carrinho`}
-                        className="rounded-full bg-primary px-3 py-1.5 text-[12px] font-semibold text-primary-foreground shadow-lg shadow-primary/25"
-                      >
-                        Adicionar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="rounded-2xl border border-white/[0.06] bg-[#1A1A1A] p-4 text-[13px] text-[#8A8A8A]">
-                Nenhum prato encontrado. Tente buscar por pizza, burger, sushi ou sobremesa.
-              </div>
-            )}
-          </div>
+function OrderSummary() {
+  const { items, getItemCount, getTotal } = useCart();
+  const count = getItemCount();
+  const total = getTotal();
+
+  return (
+    <aside className="sticky top-24 rounded-2xl border border-border bg-white p-5 shadow-[0_12px_36px_rgba(35,31,27,0.07)]">
+      <div className="flex items-center gap-2">
+        <ShoppingBag className="h-5 w-5 text-primary" strokeWidth={1.75} aria-hidden="true" />
+        <h2 className="text-lg">Seu pedido</h2>
+      </div>
+
+      {items.length === 0 ? (
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          Adicione itens para montar seu pedido no Forno da Vila.
+        </p>
+      ) : (
+        <div className="mt-4 space-y-3">
+          {items.slice(0, 3).map((cartItem) => (
+            <div key={cartItem.cartId} className="flex justify-between gap-3 text-sm">
+              <span className="line-clamp-1 text-muted-foreground">
+                {cartItem.quantity}× {cartItem.item.name}
+              </span>
+              <span className="shrink-0 font-semibold">
+                {formatCurrency(cartItem.totalPrice)}
+              </span>
+            </div>
+          ))}
+          {items.length > 3 && (
+            <p className="text-xs text-muted-foreground">
+              Mais {items.length - 3} {items.length - 3 === 1 ? "item" : "itens"}
+            </p>
+          )}
         </div>
       )}
 
-      {/* Categories */}
-      <div className="px-4 mt-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[18px] text-white">Categorias</h2>
-          <Link to="/menu" className="text-primary text-[13px] flex items-center gap-0.5 hover:gap-1.5 transition-all">
-            Ver todas <ChevronRight className="w-4 h-4" />
-          </Link>
+      <div className="mt-5 border-t border-border pt-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            {count} {count === 1 ? "item" : "itens"}
+          </span>
+          <span className="text-lg font-extrabold">{formatCurrency(total)}</span>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {categories.map((cat, i) => (
-            <motion.div
-              key={cat.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, delay: i * 0.05 }}
-            >
-              <Link
-                to={`/menu?category=${cat.id}`}
-                className="flex flex-col items-center gap-1.5 min-w-[72px] group"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-[#1A1A1A] flex items-center justify-center text-2xl border border-white/[0.06] group-hover:border-primary/30 group-hover:bg-primary/10 group-hover:shadow-[0_0_16px_rgba(234,29,44,0.15)] transition-all duration-300">
-                  {cat.icon}
-                </div>
-                <span className="text-[11px] text-[#8A8A8A] group-hover:text-foreground transition-colors">
-                  {cat.name}
-                </span>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      {/* Featured Banner */}
-      <div className="px-4 mt-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="relative rounded-2xl overflow-hidden h-44 border border-white/[0.06]"
+        <Link
+          to="/cart"
+          className="mt-4 flex min-h-11 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white transition-colors hover:bg-[#a93622]"
         >
+          Ver carrinho
+        </Link>
+      </div>
+
+      <div className="mt-5 space-y-3 border-t border-border pt-4 text-xs text-muted-foreground">
+        <p className="flex items-start gap-2">
+          <Bike className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+          Entrega simulada ou retirada no balcão.
+        </p>
+        <p className="flex items-start gap-2">
+          <MapPin className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+          Endereço informado apenas no checkout.
+        </p>
+      </div>
+    </aside>
+  );
+}
+
+export function HomePage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const { addItem } = useCart();
+  const featured = getFeaturedItems();
+  const normalizedQuery = searchQuery.trim().toLocaleLowerCase("pt-BR");
+  const visibleItems = normalizedQuery
+    ? menuItems.filter((item) =>
+      [item.name, item.description, item.category]
+        .join(" ")
+        .toLocaleLowerCase("pt-BR")
+        .includes(normalizedQuery),
+    )
+    : featured;
+
+  const handleAdd = (item: MenuItem) => addItem(item, 1, {}, 0);
+
+  return (
+    <div className="pb-8 lg:pb-12">
+      <section className="p-4 sm:p-6">
+        <div className="relative min-h-[224px] overflow-hidden rounded-2xl bg-[#241e19] sm:min-h-[280px]">
           <ImageWithFallback
-            src={featured[0]?.image}
-            alt="Destaque"
-            className="w-full h-full object-cover"
+            src="https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1800&q=88"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0D0D0D]/90 via-[#0D0D0D]/50 to-transparent" />
-          <div className="absolute bottom-4 left-4 right-4">
-            <span className="inline-flex items-center gap-1 bg-primary text-primary-foreground text-[11px] px-3 py-1 rounded-full font-semibold shadow-lg shadow-primary/30 neon-border">
-              <Flame className="w-3 h-3" />
-              Destaque do dia
-            </span>
-            <h3 className="text-white mt-2 text-[18px] drop-shadow-lg">{featured[0]?.name}</h3>
-            <div className="flex items-center gap-3 mt-1.5">
-              <span className="text-white/90 text-[15px] font-semibold">
-                R$ {featured[0]?.price.toFixed(2).replace(".", ",")}
-              </span>
-              <Link
-                to={`/item/${featured[0]?.id}`}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground text-[13px] px-5 py-2 rounded-full font-semibold transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50"
-              >
-                Pedir agora
-              </Link>
-            </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/48 to-black/10" />
+          <div className="relative flex min-h-[224px] max-w-xl flex-col justify-end p-5 text-white sm:min-h-[280px] sm:p-8">
+            <p className="text-sm font-semibold text-white/80">Pizzaria artesanal de bairro</p>
+            <h1 className="mt-1 text-[2rem] text-white sm:text-[2.75rem]">Forno da Vila</h1>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-white/85 sm:text-base">
+              Massa de fermentação natural, ingredientes selecionados e forno a lenha.
+            </p>
           </div>
-        </motion.div>
-      </div>
-
-      {/* Featured Items - Horizontal scroll */}
-      <div className="px-4 mt-7">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[18px] text-white">Destaques</h2>
-          <Link to="/menu" className="text-primary text-[13px] flex items-center gap-0.5 hover:gap-1.5 transition-all">
-            Ver mais <ChevronRight className="w-4 h-4" />
-          </Link>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {featured.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
-            >
-              <Link
-                to={`/item/${item.id}`}
-                className="min-w-[180px] bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/[0.06] card-glow block"
-              >
-                <div className="h-28 overflow-hidden relative">
-                  <ImageWithFallback
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/70 to-transparent" />
-                </div>
-                <div className="p-3">
-                  <h4 className="text-[13px] truncate text-foreground">{item.name}</h4>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star className="w-3.5 h-3.5 fill-accent text-accent" />
-                    <span className="text-[12px] text-accent font-medium">{item.rating}</span>
-                    <span className="text-[12px] text-[#4A4A4A] mx-1">&middot;</span>
-                    <Clock className="w-3 h-3 text-[#9A9A9A]" />
-                    <span className="text-[11px] text-[#9A9A9A]">{item.prepTime}</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-primary font-semibold text-[14px]">
-                      R$ {item.price.toFixed(2).replace(".", ",")}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        addItem(item, 1, {}, 0);
-                      }}
-                      aria-label={`Adicionar ${item.name} ao carrinho`}
-                      className="w-7 h-7 rounded-full bg-primary hover:bg-primary/80 text-primary-foreground flex items-center justify-center text-[18px] transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+      </section>
+
+      <section className="px-4 sm:px-6" aria-label="Busca e categorias">
+        <label className="relative block">
+          <span className="sr-only">Buscar no cardápio</span>
+          <Search
+            className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground"
+            strokeWidth={1.75}
+            aria-hidden="true"
+          />
+          <input
+            type="search"
+            placeholder="Buscar pizzas, entradas e bebidas"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            className="min-h-12 w-full rounded-xl border border-border bg-white pl-12 pr-4 text-sm shadow-sm outline-none transition focus:border-primary"
+          />
+        </label>
+
+        <div className="mt-3 flex overflow-x-auto border-b border-border scrollbar-hide">
+          {categories.map((category) => (
+            <CategoryLink key={category.id} category={category} />
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Popular Items - Vertical list */}
-      <div className="px-4 mt-7">
-        <div className="flex items-center gap-2 mb-3">
-          <Flame className="w-5 h-5 text-primary drop-shadow-[0_0_6px_rgba(234,29,44,0.4)]" />
-          <h2 className="text-[18px] text-white">Mais Pedidos</h2>
-        </div>
-        <div className="space-y-3">
-          {popular.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.05 * i }}
-            >
+      <div className="grid gap-8 px-4 pt-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section>
+          <div className="flex items-end justify-between gap-4 border-b border-border pb-3">
+            <div>
+              <h2>{normalizedQuery ? "Resultados" : "Pizzas artesanais"}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {normalizedQuery
+                  ? `${visibleItems.length} ${visibleItems.length === 1 ? "item encontrado" : "itens encontrados"}`
+                  : "Feitas com massa de fermentação natural e assadas no forno a lenha."}
+              </p>
+            </div>
+            {!normalizedQuery && (
               <Link
-                to={`/item/${item.id}`}
-                className="flex gap-3 bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/[0.06] p-3 card-glow block"
+                to="/menu?category=pizzas"
+                className="hidden shrink-0 items-center gap-1 text-sm font-bold text-primary sm:flex"
               >
-                <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 ring-1 ring-white/[0.06]">
-                  <ImageWithFallback
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-[14px] truncate text-foreground">{item.name}</h4>
-                  <p className="text-[12px] text-[#9A9A9A] line-clamp-2 mt-0.5">
-                    {item.description}
-                  </p>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-primary font-semibold">
-                      R$ {item.price.toFixed(2).replace(".", ",")}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3.5 h-3.5 fill-accent text-accent" />
-                      <span className="text-[12px] text-accent font-medium">{item.rating}</span>
-                    </div>
-                  </div>
-                </div>
+                Ver todas
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-            </motion.div>
-          ))}
+            )}
+          </div>
+
+          {visibleItems.length > 0 ? (
+            <div>
+              {visibleItems.map((item) => (
+                <MenuRow key={item.id} item={item} onAdd={handleAdd} />
+              ))}
+            </div>
+          ) : (
+            <div className="py-14 text-center">
+              <Pizza className="mx-auto h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
+              <h3 className="mt-3">Nenhum item encontrado</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Tente buscar por margherita, focaccia, sobremesa ou bebida.
+              </p>
+            </div>
+          )}
+
+          {!normalizedQuery && (
+            <Link
+              to="/menu?category=pizzas"
+              className="mt-4 flex min-h-11 w-full items-center justify-center gap-1 rounded-xl border border-border bg-white text-sm font-bold text-foreground sm:hidden"
+            >
+              Ver mais pizzas
+              <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          )}
+        </section>
+
+        <div className="hidden lg:block">
+          <OrderSummary />
         </div>
       </div>
     </div>

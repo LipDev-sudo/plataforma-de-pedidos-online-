@@ -1,56 +1,44 @@
-import { Home, Search, ShoppingCart, ClipboardList } from "lucide-react";
+import { BookOpen, ClipboardList, Home, ShoppingCart } from "lucide-react";
 import { NavLink } from "react-router";
 import { useCart } from "../context/CartContext";
 
 const navItems = [
-  { to: "/", icon: Home, label: "Inicio" },
-  { to: "/menu", icon: Search, label: "Buscar" },
+  { to: "/", icon: Home, label: "Início" },
+  { to: "/menu", icon: BookOpen, label: "Cardápio" },
   { to: "/cart", icon: ShoppingCart, label: "Carrinho" },
   { to: "/orders", icon: ClipboardList, label: "Pedidos" },
 ];
 
 export function BottomNav() {
   const { getItemCount } = useCart();
-  const count = getItemCount();
+  const itemCount = getItemCount();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-white/[0.06]">
-      <div className="max-w-3xl mx-auto flex items-center justify-around py-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-        {navItems.map((nav) => (
+    <nav
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-white/98 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(35,31,27,0.06)] lg:hidden"
+      aria-label="Navegação principal"
+    >
+      <div className="mx-auto grid h-16 max-w-md grid-cols-4">
+        {navItems.map((item) => (
           <NavLink
-            key={nav.to + nav.label}
-            to={nav.to}
-            end={nav.to === "/"}
+            key={item.to}
+            to={item.to}
+            end={item.to === "/"}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all duration-200 relative ${
-                isActive
-                  ? "text-primary"
-                  : "text-[#9A9A9A] hover:text-foreground/70"
+              `relative flex min-h-11 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors ${
+                isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
               }`
             }
           >
-            {({ isActive }) => (
-              <>
-                <div className="relative">
-                  {isActive && (
-                    <div className="absolute -inset-2 bg-primary/10 rounded-xl animate-pulse-glow" />
-                  )}
-                  <nav.icon
-                    className={`w-5 h-5 relative z-10 transition-all ${
-                      isActive ? "stroke-[2.5] drop-shadow-[0_0_6px_rgba(234,29,44,0.5)]" : "stroke-[1.5]"
-                    }`}
-                  />
-                  {nav.label === "Carrinho" && count > 0 && (
-                    <span className="absolute -top-2 -right-3 bg-primary text-primary-foreground rounded-full min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold z-20 shadow-lg shadow-primary/40 neon-border">
-                      {count > 9 ? "9+" : count}
-                    </span>
-                  )}
-                </div>
-                <span className={`text-[10px] ${isActive ? "font-semibold text-primary" : ""}`}>
-                  {nav.label}
+            <div className="relative">
+              <item.icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+              {item.to === "/cart" && itemCount > 0 && (
+                <span className="absolute -right-3 -top-2 flex min-h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-white">
+                  {itemCount}
                 </span>
-              </>
-            )}
+              )}
+            </div>
+            {item.label}
           </NavLink>
         ))}
       </div>

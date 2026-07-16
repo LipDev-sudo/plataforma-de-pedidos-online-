@@ -39,8 +39,8 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
-const CART_STORAGE_KEY = "lipdev-pedidos-cart";
-const ORDERS_STORAGE_KEY = "lipdev-pedidos-orders-v2";
+const CART_STORAGE_KEY = "mesaora-cart-v1";
+const ORDERS_STORAGE_KEY = "mesaora-orders-v1";
 
 function loadFromStorage<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
