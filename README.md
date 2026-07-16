@@ -1,67 +1,92 @@
-# Plataforma de Pedidos Online
+# Mesaora
 
-Sistema de pedidos online para restaurantes e pequenos negocios, com cardapio digital, carrinho e fluxo mobile-first.
+**Do cardápio ao pedido, direto.**
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-00D4FF?style=for-the-badge)](https://plataforma-de-pedidos-online-two.vercel.app/)
-[![Portfolio](https://img.shields.io/badge/Portfolio-LipDev.BR-BEF264?style=for-the-badge)](https://lipdev.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-LipDev--sudo-181717?style=for-the-badge&logo=github)](https://github.com/LipDev-sudo)
+Mesaora é uma demonstração funcional de cardápio digital e gestão da jornada de pedidos para restaurantes, lanchonetes e pequenos deliveries. O produto é apresentado por meio do **Forno da Vila**, uma pizzaria artesanal fictícia com menu, linguagem e dados consistentes.
 
-## Visao do projeto
+[Abrir demonstração](https://plataforma-de-pedidos-online-two.vercel.app/) · [Ver portfólio](https://lipdev.vercel.app/)
 
-Projeto criado para simular uma experiencia de delivery simples, rapida e direta para negocios locais.
+![Mesaora em desktop](docs/screenshots/mesaora-desktop.png)
 
-## Demo
+> Este é um produto demonstrativo. Nenhum pedido ou pagamento real é processado.
 
-- Aplicacao online: https://plataforma-de-pedidos-online-two.vercel.app/
-- Portfolio principal: https://lipdev.vercel.app/
+## Proposta do produto
 
-## Destaques
+Mesaora organiza uma experiência direta entre o restaurante e o cliente: descoberta do cardápio, personalização do item, carrinho, checkout e acompanhamento do pedido no mesmo fluxo. A interface prioriza o uso no celular sem perder clareza em telas maiores.
 
-- Cardapio digital com navegacao clara
-- Fluxo de pedido com carrinho visual
-- Layout mobile-first para clientes no celular
-- Estrutura facil de adaptar para WhatsApp ou checkout
-- Boa base para evoluir para painel administrativo e status de pedidos
+## Fluxo demonstrado
 
-## Stack
+1. explore ou pesquise o cardápio do Forno da Vila;
+2. escolha uma pizza e seus complementos;
+3. revise quantidades e valores no carrinho;
+4. informe um endereço fictício e uma forma de pagamento;
+5. confirme o pedido simulado;
+6. acompanhe os estados `Preparando`, `A caminho` e `Entregue`;
+7. repita um pedido concluído.
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
+Carrinho e pedidos são persistidos no `localStorage` do navegador. Os dados podem ser removidos limpando os dados do site.
 
-## Como rodar localmente
+![Acompanhamento do pedido demonstrativo](docs/screenshots/mesaora-acompanhamento.png)
+
+## Identidade
+
+- **Produto:** Mesaora;
+- **Slogan:** Do cardápio ao pedido, direto.;
+- **Restaurante demonstrativo:** Forno da Vila;
+- **Público:** restaurantes, lanchonetes e pequenos deliveries;
+- **Tom:** acolhedor, direto e operacional;
+- **Direção visual:** papel quente, vermelho de forno, tipografia limpa e estados semânticos de alto contraste.
+
+## Tecnologias
+
+- React 18;
+- TypeScript;
+- Vite 6;
+- React Router 7;
+- Tailwind CSS 4;
+- Lucide React;
+- Playwright, ESLint e GitHub Actions.
+
+## Executar localmente
+
+Requisitos: Node.js 22 e npm.
 
 ```bash
-npm install
+git clone https://github.com/LipDev-sudo/plataforma-de-pedidos-online-.git
+cd plataforma-de-pedidos-online-
+npm ci
 npm run dev
 ```
 
-Para gerar uma build de producao:
+## Validações
 
 ```bash
+npm run typecheck
+npm run lint
+npm test
 npm run build
-npm run preview
+npm audit
 ```
 
-## Estrutura de evolucao
+Os testes percorrem o fluxo completo em `1440×900` e `390×844`, verificando persistência, mudança de status, repetição do pedido, navegação por teclado, links, metadata, erros de console e overflow horizontal.
 
-Este projeto pode evoluir com:
+## Screenshots
 
-- Integracao com API real
-- Painel administrativo
-- Autenticacao de usuarios
-- Checkout ou integracao com WhatsApp
-- Banco de dados para produtos, pedidos e clientes
+| Desktop | Mobile |
+| --- | --- |
+| ![Desktop](docs/screenshots/mesaora-desktop.png) | ![Mobile](docs/screenshots/mesaora-mobile.png) |
+
+## Limites da demonstração
+
+- não há autenticação, API, banco de dados ou painel administrativo;
+- pagamentos são apenas opções visuais;
+- estoque, entrega e mudança de status são simulados localmente;
+- imagens do cardápio são carregadas de fontes externas.
 
 ## Autor
 
-Desenvolvido por **Hamilton Felipe Soares da Silva** - LipDev.BR.
+Hamilton Felipe Soares da Silva · [GitHub](https://github.com/LipDev-sudo) · [LinkedIn](https://www.linkedin.com/in/hamilton-felipe-875054383/)
 
-- Portfolio: https://lipdev.vercel.app/
-- GitHub: https://github.com/LipDev-sudo
-- LinkedIn: https://www.linkedin.com/in/hamilton-felipe-875054383/
+## Licença
 
-## Licenca
-
-Este projeto esta sob a licenca MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Distribuído sob a [licença MIT](LICENSE).

@@ -1,36 +1,53 @@
+import { ArrowLeft, Clock3, Minus, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router";
-import { ArrowLeft, Star, Clock, Minus, Plus, ShoppingCart } from "lucide-react";
-import { getItemById } from "../data/menu-data";
+import { useNavigate, useParams } from "react-router";
+import { ImageWithFallback } from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { getItemById } from "../data/menu-data";
+
+const formatCurrency = (value: number) =>
+  value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export function ItemPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const item = getItemById(id || "");
   const { addItem } = useCart();
-
   const [quantity, setQuantity] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({});
   const [extraPrice, setExtraPrice] = useState(0);
 
   if (!item) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-[#6B6B6B]">Item nao encontrado</p>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
+        <h1>Item não encontrado</h1>
+        <button
+          type="button"
+          onClick={() => navigate("/menu")}
+          className="mt-5 min-h-11 rounded-xl bg-primary px-5 text-sm font-bold text-white"
+        >
+          Voltar ao cardápio
+        </button>
       </div>
     );
   }
 
-  const handleOptionSelect = (custName: string, optLabel: string, optPrice: number) => {
-    const prev = selectedOptions[custName];
-    const prevPrice = item.customizations
-      ?.find((c) => c.name === custName)
-      ?.options.find((o) => o.label === prev)?.price || 0;
+  const handleOptionSelect = (
+    customizationName: string,
+    optionLabel: string,
+    optionPrice: number,
+  ) => {
+    const previousLabel = selectedOptions[customizationName];
+    const previousPrice =
+      item.customizations
+        ?.find((customization) => customization.name === customizationName)
+        ?.options.find((option) => option.label === previousLabel)?.price || 0;
 
-    setSelectedOptions((s) => ({ ...s, [custName]: optLabel }));
-    setExtraPrice((p) => p - prevPrice + optPrice);
+    setSelectedOptions((current) => ({
+      ...current,
+      [customizationName]: optionLabel,
+    }));
+    setExtraPrice((current) => current - previousPrice + optionPrice);
   };
 
   const totalPrice = (item.price + extraPrice) * quantity;
@@ -41,125 +58,139 @@ export function ItemPage() {
   };
 
   return (
-    <div className="pb-28">
-      {/* Image Header */}
-      <div className="relative h-72">
-        <ImageWithFallback
-          src={item.image}
-          alt={item.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/20 to-transparent" />
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 w-10 h-10 rounded-full bg-[#0D0D0D]/70 backdrop-blur-sm flex items-center justify-center border border-white/[0.1]"
-        >
-          <ArrowLeft className="w-5 h-5 text-white" />
-        </button>
-      </div>
+    <div className="pb-32 lg:pb-28">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        aria-label="Voltar"
+        className="m-4 flex min-h-11 items-center gap-2 rounded-xl border border-border bg-white px-4 text-sm font-bold shadow-sm sm:mx-6 sm:mt-6"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Voltar
+      </button>
 
-      {/* Content */}
-      <div className="px-4 -mt-6 relative">
-        <div className="bg-[#1A1A1A] rounded-2xl shadow-lg p-4 border border-white/[0.06]">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h1 className="text-white">{item.name}</h1>
-              <div className="flex items-center gap-3 mt-1.5">
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-accent text-accent" />
-                  <span className="text-[14px] text-[#8A8A8A]">{item.rating}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4 text-[#6B6B6B]" />
-                  <span className="text-[14px] text-[#8A8A8A]">{item.prepTime}</span>
-                </div>
-              </div>
-            </div>
-            <span className="text-primary text-[22px] font-semibold">
-              R$ {item.price.toFixed(2).replace(".", ",")}
-            </span>
-          </div>
-          <p className="text-[14px] text-[#8A8A8A] mt-3 leading-relaxed">
-            {item.description}
-          </p>
+      <div className="grid gap-6 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+        <div className="overflow-hidden rounded-2xl border border-border bg-secondary">
+          <ImageWithFallback
+            src={item.image}
+            alt={item.name}
+            className="aspect-[4/3] h-full max-h-[560px] w-full object-cover"
+          />
         </div>
 
-        {/* Customizations */}
-        {item.customizations && item.customizations.length > 0 && (
-          <div className="mt-4 space-y-4">
-            {item.customizations.map((cust) => (
-              <div key={cust.name} className="bg-[#1A1A1A] rounded-2xl p-4 border border-white/[0.06]">
-                <h3 className="mb-3 text-foreground">{cust.name}</h3>
-                <div className="space-y-2">
-                  {cust.options.map((opt) => (
-                    <button
-                      key={opt.label}
-                      onClick={() => handleOptionSelect(cust.name, opt.label, opt.price)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
-                        selectedOptions[cust.name] === opt.label
-                          ? "bg-primary/10 border-2 border-primary shadow-[0_0_12px_rgba(234,29,44,0.1)]"
-                          : "bg-[#252525] border-2 border-transparent hover:border-white/[0.1]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                            selectedOptions[cust.name] === opt.label
-                              ? "border-primary"
-                              : "border-[#4A4A4A]"
+        <section>
+          <div className="rounded-2xl border border-border bg-white p-5 shadow-[0_8px_30px_rgba(35,31,27,0.05)] sm:p-6">
+            <p className="text-sm font-bold text-primary">Forno da Vila</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h1>{item.name}</h1>
+              <span className="shrink-0 text-xl font-extrabold">
+                {formatCurrency(item.price)}
+              </span>
+            </div>
+            <p className="mt-3 leading-relaxed text-muted-foreground">
+              {item.description}
+            </p>
+            <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+              <Clock3 className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+              Preparo estimado em {item.prepTime}
+            </p>
+          </div>
+
+          {item.customizations && item.customizations.length > 0 && (
+            <div className="mt-4 space-y-4">
+              {item.customizations.map((customization) => (
+                <fieldset
+                  key={customization.name}
+                  className="rounded-2xl border border-border bg-white p-5"
+                >
+                  <legend className="px-1 text-base font-bold">
+                    {customization.name}
+                  </legend>
+                  <div className="mt-2 space-y-2">
+                    {customization.options.map((option) => {
+                      const selected =
+                        selectedOptions[customization.name] === option.label;
+                      return (
+                        <button
+                          key={option.label}
+                          type="button"
+                          onClick={() =>
+                            handleOptionSelect(
+                              customization.name,
+                              option.label,
+                              option.price,
+                            )
+                          }
+                          aria-pressed={selected}
+                          className={`flex min-h-12 w-full items-center justify-between rounded-xl border px-4 text-left text-sm transition-colors ${
+                            selected
+                              ? "border-primary bg-primary/5"
+                              : "border-border bg-background hover:border-primary/45"
                           }`}
                         >
-                          {selectedOptions[cust.name] === opt.label && (
-                            <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_6px_rgba(234,29,44,0.5)]" />
+                          <span className="flex items-center gap-3 font-semibold">
+                            <span
+                              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                                selected ? "border-primary" : "border-[#9b9289]"
+                              }`}
+                              aria-hidden="true"
+                            >
+                              {selected && (
+                                <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+                              )}
+                            </span>
+                            {option.label}
+                          </span>
+                          {option.price > 0 && (
+                            <span className="font-bold text-primary">
+                              + {formatCurrency(option.price)}
+                            </span>
                           )}
-                        </div>
-                        <span className="text-[14px] text-foreground">{opt.label}</span>
-                      </div>
-                      {opt.price > 0 && (
-                        <span className="text-[13px] text-primary">
-                          + R$ {opt.price.toFixed(2).replace(".", ",")}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              ))}
+            </div>
+          )}
 
-        {/* Quantity */}
-        <div className="mt-4 bg-[#1A1A1A] rounded-2xl p-4 border border-white/[0.06]">
-          <h3 className="mb-3 text-foreground">Quantidade</h3>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-10 h-10 rounded-xl bg-[#252525] flex items-center justify-center text-foreground border border-white/[0.06] hover:bg-[#333] transition-colors"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-            <span className="text-[20px] w-8 text-center text-foreground">{quantity}</span>
-            <button
-              onClick={() => setQuantity(quantity + 1)}
-              className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-lg shadow-primary/25"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
+          <div className="mt-4 flex items-center justify-between rounded-2xl border border-border bg-white p-5">
+            <h2 className="text-base">Quantidade</h2>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setQuantity((current) => Math.max(1, current - 1))}
+                aria-label="Diminuir quantidade"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-border bg-background hover:border-primary"
+              >
+                <Minus className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <span className="w-6 text-center text-lg font-bold">{quantity}</span>
+              <button
+                type="button"
+                onClick={() => setQuantity((current) => current + 1)}
+                aria-label="Aumentar quantidade"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-xl bg-primary text-white"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
 
-      {/* Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#0D0D0D]/95 backdrop-blur-xl border-t border-white/[0.06] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <div className="max-w-lg mx-auto">
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-border bg-white/96 p-3 backdrop-blur-md lg:bottom-0">
+        <div className="mx-auto max-w-6xl">
           <button
+            type="button"
             onClick={handleAddToCart}
-            className="w-full bg-primary text-primary-foreground py-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all"
+            className="flex min-h-12 w-full items-center justify-center gap-3 rounded-xl bg-primary px-5 text-sm font-bold text-white transition-colors hover:bg-[#a93622]"
           >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Adicionar ao carrinho</span>
-            <span className="bg-white/20 px-3 py-0.5 rounded-full text-[14px]">
-              R$ {totalPrice.toFixed(2).replace(".", ",")}
+            <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+            Adicionar ao carrinho
+            <span className="border-l border-white/35 pl-3">
+              {formatCurrency(totalPrice)}
             </span>
           </button>
         </div>
