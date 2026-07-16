@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://plataforma-de-pedidos-online-two.vercel.app/sitemap.xml
