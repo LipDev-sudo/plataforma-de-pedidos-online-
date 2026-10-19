@@ -26,7 +26,7 @@ export function BrandMark({ compact = false }: { compact?: boolean }) {
           Mesaora
         </p>
         {!compact && (
-          <p className="mt-1 text-[11px] leading-none text-muted-foreground">
+          <p className="mt-1 text-xs leading-none text-muted-foreground">
             Do cardápio ao pedido, direto.
           </p>
         )}

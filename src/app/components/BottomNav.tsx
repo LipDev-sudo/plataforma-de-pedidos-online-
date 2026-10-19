@@ -25,7 +25,7 @@ export function BottomNav() {
             to={item.to}
             end={item.to === "/"}
             className={({ isActive }) =>
-              `relative flex min-h-11 flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors ${
+              `relative flex min-h-11 flex-col items-center justify-center gap-1 text-xs font-semibold transition-colors ${
                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
               }`
             }
