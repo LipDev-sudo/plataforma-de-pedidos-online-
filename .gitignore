@@ -18,3 +18,5 @@ next-env.d.ts
 .vite/
 test-results/
 playwright-report/
+
+.lighthouseci/

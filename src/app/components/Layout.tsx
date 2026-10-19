@@ -15,7 +15,7 @@ export function Layout() {
     <div className="min-h-screen bg-[#f6f4f0] text-foreground">
       <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-md">
         <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-4 sm:px-6">
-          <NavLink to="/" className="text-primary">
+          <NavLink to="/" className="inline-flex min-h-11 items-center text-primary">
             <span className="hidden sm:block">
               <BrandMark />
             </span>
@@ -46,7 +46,7 @@ export function Layout() {
           <div className="hidden items-center gap-2 text-left sm:flex">
             <MapPin className="h-4 w-4 text-primary" aria-hidden="true" />
             <div>
-              <p className="text-[11px] leading-none text-muted-foreground">Entregar em</p>
+              <p className="text-xs leading-none text-muted-foreground">Entregar em</p>
               <p className="mt-1 text-sm font-semibold">Informe no checkout</p>
             </div>
           </div>
@@ -65,7 +65,7 @@ export function Layout() {
               href="https://github.com/LipDev-sudo/plataforma-de-pedidos-online-"
               target="_blank"
               rel="noreferrer"
-              className="font-semibold hover:text-primary"
+              className="inline-flex min-h-11 items-center font-semibold hover:text-primary"
             >
               Código
             </a>
@@ -73,7 +73,7 @@ export function Layout() {
               href="https://lipdev.vercel.app/"
               target="_blank"
               rel="noreferrer"
-              className="font-semibold hover:text-primary"
+              className="inline-flex min-h-11 items-center font-semibold hover:text-primary"
             >
               Portfólio
             </a>
