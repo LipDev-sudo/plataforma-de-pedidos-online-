@@ -78,6 +78,8 @@ Os testes percorrem o fluxo completo em `1440×900` e `390×844`, verificando pe
 
 ## Implantação para um cliente
 
+Na demonstração (`demonstracao: true`), o botão "Ver onde entra sua marca" mostra etiquetas sobre a logo, o nome, a capa, o cardápio, a taxa de entrega, as formas de pagamento e o WhatsApp. Com `demonstracao: false` elas não aparecem.
+
 O pedido é montado no site e enviado ao WhatsApp do restaurante, sem comissão por pedido e sem servidor próprio.
 
 1. Copie o repositório para um novo projeto do cliente.

@@ -4,7 +4,6 @@ import { Link, useSearchParams } from "react-router";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { categories, getItemsByCategory, menuItems } from "../data/menu-data";
-import { restaurante } from "../../restaurante";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -29,7 +28,7 @@ export function MenuPage() {
   return (
     <div className="pb-10">
       <div className="px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
-        <h1>Cardápio de {restaurante.nome}</h1>
+        <h1>Cardápio</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Pizzas de fermentação natural, entradas, sobremesas e bebidas preparadas
           para acompanhar o pedido.
@@ -47,18 +46,18 @@ export function MenuPage() {
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Buscar no cardápio"
-            className="min-h-12 w-full rounded-xl border border-border bg-white pl-12 pr-4 text-sm shadow-sm outline-none transition focus:border-primary"
+            className="min-h-12 w-full rounded-xl border border-border bg-card pl-12 pr-4 text-sm shadow-sm outline-none transition focus:border-foreground/40"
           />
         </label>
       </div>
 
-      <div className="border-y border-border bg-white px-4 sm:px-6">
+      <div className="border-y border-border bg-card px-4 sm:px-6">
         <div className="flex gap-1 overflow-x-auto py-2 scrollbar-hide">
           <button
             type="button"
             onClick={() => setSearchParams({})}
             aria-pressed={activeCategory === "all"}
-            className={`min-h-11 whitespace-nowrap rounded-lg px-4 text-sm font-bold transition-colors ${
+            className={`min-h-11 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-colors ${
               activeCategory === "all"
                 ? "bg-primary text-white"
                 : "text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -72,7 +71,7 @@ export function MenuPage() {
               type="button"
               onClick={() => setSearchParams({ category: category.id })}
               aria-pressed={activeCategory === category.id}
-              className={`min-h-11 whitespace-nowrap rounded-lg px-4 text-sm font-bold transition-colors ${
+              className={`min-h-11 whitespace-nowrap rounded-lg px-4 text-sm font-medium transition-colors ${
                 activeCategory === category.id
                   ? "bg-primary text-white"
                   : "text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -95,7 +94,7 @@ export function MenuPage() {
             {searchedItems.map((item) => (
               <article
                 key={item.id}
-                className="product-row flex overflow-hidden rounded-2xl border border-border bg-white shadow-[0_6px_22px_rgba(35,31,27,0.05)]"
+                className="product-row flex overflow-hidden rounded-2xl border border-border bg-card"
               >
                 <Link
                   to={`/item/${item.id}`}
@@ -119,14 +118,14 @@ export function MenuPage() {
                     {item.prepTime}
                   </p>
                   <div className="mt-auto flex items-end justify-between gap-3 pt-3">
-                    <span className="text-sm font-extrabold">
+                    <span className="text-sm font-semibold">
                       {formatCurrency(item.price)}
                     </span>
                     <button
                       type="button"
                       onClick={() => addItem(item, 1, {}, 0)}
                       aria-label={`Adicionar ${item.name} ao carrinho`}
-                      className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-primary text-primary transition-colors hover:bg-primary hover:text-white"
+                      className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-foreground/40 text-foreground transition-colors hover:bg-primary hover:text-white"
                     >
                       <Plus className="h-5 w-5" aria-hidden="true" />
                     </button>
@@ -136,7 +135,7 @@ export function MenuPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-border bg-white px-5 py-14 text-center">
+          <div className="rounded-2xl border border-dashed border-border bg-card px-5 py-14 text-center">
             <h2 className="text-lg">Nenhum item encontrado</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               Ajuste a busca ou escolha outra categoria.

@@ -1,28 +1,34 @@
 :root {
+  /* Identidade Achse: neutros grafite, vermelho só em ação principal e seleção.
+     --primary e --primary-hover vêm de src/restaurante.ts no build. */
   --font-size: 16px;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --background: #fffefa;
-  --foreground: #231f1b;
-  --card: #ffffff;
-  --card-foreground: #231f1b;
+  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --background: #090A0C;
+  --foreground: #F2F3F5;
+  --card: #17191E;
+  --card-foreground: #F2F3F5;
   --primary: #A3132A;
   --primary-hover: #7F0F21;
   --primary-foreground: #ffffff;
-  --secondary: #f2eee8;
-  --secondary-foreground: #3b342e;
-  --muted: #f6f3ee;
-  --muted-foreground: #6f665e;
-  --accent: #e7dacd;
-  --accent-foreground: #3b342e;
-  --destructive: #b42318;
+  --secondary: #1D2026;
+  --secondary-foreground: #F2F3F5;
+  --muted: #101216;
+  --muted-foreground: #A7ABB4;
+  --subtle-foreground: #8A8F99;
+  --accent: #1D2026;
+  --accent-foreground: #F2F3F5;
+  --destructive: #e5484d;
   --destructive-foreground: #ffffff;
-  --border: #ded8d1;
-  --input-background: #ffffff;
-  --success: #2f6b4f;
-  --warning: #a15c12;
-  --info: #32627a;
-  --ring: rgba(189, 63, 39, 0.35);
-  --radius: 0.875rem;
+  --border: rgb(242 243 245 / 0.1);
+  --input-background: #101216;
+  --success: #4cc38a;
+  --warning: #e0a458;
+  --info: #7fa7d9;
+  --ring: rgba(242, 243, 245, 0.6);
+  --radius: 0.75rem;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -37,6 +43,8 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --font-mono: var(--font-mono);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
@@ -60,7 +68,7 @@
 
   html {
     font-size: var(--font-size);
-    background: #f6f4f0;
+    background: #090A0C;
   }
 
   body {
@@ -77,24 +85,24 @@
   }
 
   h1 {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 750;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 500;
     line-height: 1.15;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    font-weight: 750;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 500;
     line-height: 1.25;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.01em;
   }
 
   h3,
   h4 {
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.35;
-    letter-spacing: -0.015em;
+    letter-spacing: 0;
   }
 
   button,
@@ -106,4 +114,31 @@
   a {
     -webkit-tap-highlight-color: transparent;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: #fff;
+  }
 }
+
+@layer components {
+  .preco {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Marcadores de personalização: só na demonstração, mostram onde entra cada item do cliente. */
+  .marcado { position: relative; display: inline-block; }
+  .marcado-ativo { outline: 1px dashed rgb(242 243 245 / 0.5); outline-offset: 6px; border-radius: 6px; }
+  .marcador { position: absolute; left: -6px; top: -30px; z-index: 5; display: inline-flex; white-space: nowrap; border-radius: 4px; background: var(--primary); padding: 2px 8px; color: #fff; font-size: 12px; font-weight: 500; line-height: 20px; pointer-events: none; }
+  .marcador-dentro { left: 12px; top: 12px; }
+  .marcador-abaixo { top: calc(100% + 10px); }
+  .marcador-direita { left: auto; right: -6px; }
+}
+
+.marcado-ativo.marcado-bloco { display: block; }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { restaurante, taxaDeEntrega } from "../../restaurante";
+import { Marcado } from "../components/Marcado";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -16,17 +17,17 @@ export function CartPage() {
   if (items.length === 0) {
     return (
       <div className="flex min-h-[65vh] flex-col items-center justify-center px-4 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-secondary text-primary">
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-secondary text-foreground">
           <ShoppingBag className="h-9 w-9" strokeWidth={1.6} aria-hidden="true" />
         </div>
         <h1 className="mt-5">Seu carrinho está vazio</h1>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          Escolha um item do cardápio de {restaurante.nome} para começar seu pedido.
+          Escolha um item do cardápio para começar seu pedido.
         </p>
         <button
           type="button"
           onClick={() => navigate("/menu")}
-          className="mt-6 flex min-h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white"
+          className="mt-6 flex min-h-11 items-center gap-2 rounded-xl bg-primary px-5 text-sm font-medium text-white"
         >
           Ver cardápio
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -45,7 +46,7 @@ export function CartPage() {
         <button
           type="button"
           onClick={clearCart}
-          className="flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-bold text-destructive hover:bg-destructive/5"
+          className="flex min-h-11 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-destructive hover:bg-destructive/5"
         >
           <Trash2 className="h-4 w-4" aria-hidden="true" />
           Limpar
@@ -57,7 +58,7 @@ export function CartPage() {
           {items.map((cartItem) => (
             <article
               key={cartItem.cartId}
-              className="flex gap-4 rounded-2xl border border-border bg-white p-3 shadow-[0_6px_22px_rgba(35,31,27,0.04)] sm:p-4"
+              className="flex gap-4 rounded-2xl border border-border bg-card p-3 sm:p-4"
             >
               <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-secondary sm:h-28 sm:w-32">
                 <ImageWithFallback
@@ -84,7 +85,7 @@ export function CartPage() {
                   </p>
                 )}
                 <div className="mt-auto flex items-end justify-between gap-3 pt-2">
-                  <span className="text-sm font-extrabold">
+                  <span className="text-sm font-semibold">
                     {formatCurrency(cartItem.totalPrice)}
                   </span>
                   <div className="flex items-center gap-2">
@@ -98,7 +99,7 @@ export function CartPage() {
                     >
                       <Minus className="h-4 w-4" aria-hidden="true" />
                     </button>
-                    <span className="w-5 text-center text-sm font-bold">
+                    <span className="w-5 text-center text-sm font-medium">
                       {cartItem.quantity}
                     </span>
                     <button
@@ -118,14 +119,14 @@ export function CartPage() {
           ))}
         </section>
 
-        <aside className="hidden h-fit rounded-2xl border border-border bg-white p-5 lg:block">
+        <aside className="hidden h-fit rounded-2xl border border-border bg-card p-5 lg:block">
           <h2 className="text-lg">Resumo</h2>
           <Summary total={total} deliveryFee={deliveryFee} />
           <CheckoutButton onClick={() => navigate("/checkout")} />
         </aside>
       </div>
 
-      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-border bg-white/98 p-4 shadow-[0_-8px_28px_rgba(35,31,27,0.06)] backdrop-blur-md lg:hidden">
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 p-4 backdrop-blur-md lg:hidden">
         <div className="mx-auto max-w-6xl">
           <Summary total={total} deliveryFee={deliveryFee} compact />
           <CheckoutButton onClick={() => navigate("/checkout")} />
@@ -151,14 +152,16 @@ function Summary({
         <span>{formatCurrency(total)}</span>
       </div>
       <div className="flex justify-between text-sm">
-        <span className="text-muted-foreground">Entrega</span>
-        <span className={deliveryFee === 0 ? "font-bold text-success" : ""}>
+        <Marcado rotulo="Sua taxa de entrega" posicao="direita">
+          <span className="text-muted-foreground">Entrega</span>
+        </Marcado>
+        <span className={deliveryFee === 0 ? "font-medium text-success" : ""}>
           {deliveryFee === 0 ? "Grátis" : formatCurrency(deliveryFee)}
         </span>
       </div>
-      <div className="flex justify-between border-t border-border pt-2 font-extrabold">
+      <div className="flex justify-between border-t border-border pt-2 font-semibold">
         <span>Total</span>
-        <span className="text-primary">{formatCurrency(total + deliveryFee)}</span>
+        <span className="text-foreground">{formatCurrency(total + deliveryFee)}</span>
       </div>
     </div>
   );
@@ -169,7 +172,7 @@ function CheckoutButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-bold text-white transition-colors hover:bg-[#a93622]"
+      className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)]"
     >
       Continuar para o checkout
       <ArrowRight className="h-4 w-4" aria-hidden="true" />

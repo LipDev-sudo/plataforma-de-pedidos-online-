@@ -25,7 +25,7 @@ export function ItemPage() {
         <button
           type="button"
           onClick={() => navigate("/menu")}
-          className="mt-5 min-h-11 rounded-xl bg-primary px-5 text-sm font-bold text-white"
+          className="mt-5 min-h-11 rounded-xl bg-primary px-5 text-sm font-medium text-white"
         >
           Voltar ao cardápio
         </button>
@@ -64,7 +64,7 @@ export function ItemPage() {
         type="button"
         onClick={() => navigate(-1)}
         aria-label="Voltar"
-        className="m-4 flex min-h-11 items-center gap-2 rounded-xl border border-border bg-white px-4 text-sm font-bold shadow-sm sm:mx-6 sm:mt-6"
+        className="m-4 flex min-h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-medium shadow-sm sm:mx-6 sm:mt-6"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Voltar
@@ -80,11 +80,11 @@ export function ItemPage() {
         </div>
 
         <section>
-          <div className="rounded-2xl border border-border bg-white p-5 shadow-[0_8px_30px_rgba(35,31,27,0.05)] sm:p-6">
-            <p className="text-sm font-bold text-primary">{restaurante.nome}</p>
+          <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+            <p className="text-sm font-medium text-foreground">{restaurante.nome}</p>
             <div className="mt-2 flex items-start justify-between gap-4">
               <h1>{item.name}</h1>
-              <span className="shrink-0 text-xl font-extrabold">
+              <span className="shrink-0 text-xl font-semibold">
                 {formatCurrency(item.price)}
               </span>
             </div>
@@ -102,9 +102,9 @@ export function ItemPage() {
               {item.customizations.map((customization) => (
                 <fieldset
                   key={customization.name}
-                  className="rounded-2xl border border-border bg-white p-5"
+                  className="rounded-2xl border border-border bg-card p-5"
                 >
-                  <legend className="px-1 text-base font-bold">
+                  <legend className="px-1 text-base font-medium">
                     {customization.name}
                   </legend>
                   <div className="mt-2 space-y-2">
@@ -125,14 +125,14 @@ export function ItemPage() {
                           aria-pressed={selected}
                           className={`flex min-h-12 w-full items-center justify-between rounded-xl border px-4 text-left text-sm transition-colors ${
                             selected
-                              ? "border-primary bg-primary/5"
-                              : "border-border bg-background hover:border-primary/45"
+                              ? "border-foreground/40 bg-secondary"
+                              : "border-border bg-background hover:border-foreground/40"
                           }`}
                         >
                           <span className="flex items-center gap-3 font-semibold">
                             <span
                               className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                                selected ? "border-primary" : "border-[#9b9289]"
+                                selected ? "border-foreground/40" : "border-border"
                               }`}
                               aria-hidden="true"
                             >
@@ -143,7 +143,7 @@ export function ItemPage() {
                             {option.label}
                           </span>
                           {option.price > 0 && (
-                            <span className="font-bold text-primary">
+                            <span className="font-medium text-foreground">
                               + {formatCurrency(option.price)}
                             </span>
                           )}
@@ -156,18 +156,18 @@ export function ItemPage() {
             </div>
           )}
 
-          <div className="mt-4 flex items-center justify-between rounded-2xl border border-border bg-white p-5">
+          <div className="mt-4 flex items-center justify-between rounded-2xl border border-border bg-card p-5">
             <h2 className="text-base">Quantidade</h2>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => setQuantity((current) => Math.max(1, current - 1))}
                 aria-label="Diminuir quantidade"
-                className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-border bg-background hover:border-primary"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-border bg-background hover:border-foreground/40"
               >
                 <Minus className="h-4 w-4" aria-hidden="true" />
               </button>
-              <span className="w-6 text-center text-lg font-bold">{quantity}</span>
+              <span className="w-6 text-center text-lg font-medium">{quantity}</span>
               <button
                 type="button"
                 onClick={() => setQuantity((current) => current + 1)}
@@ -181,12 +181,12 @@ export function ItemPage() {
         </section>
       </div>
 
-      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-border bg-white/96 p-3 backdrop-blur-md lg:bottom-0">
+      <div className="fixed inset-x-0 bottom-16 z-30 border-t border-border bg-background/95 p-3 backdrop-blur-md lg:bottom-0">
         <div className="mx-auto max-w-6xl">
           <button
             type="button"
             onClick={handleAddToCart}
-            className="flex min-h-12 w-full items-center justify-center gap-3 rounded-xl bg-primary px-5 text-sm font-bold text-white transition-colors hover:bg-[#a93622]"
+            className="flex min-h-12 w-full items-center justify-center gap-3 rounded-xl bg-primary px-5 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)]"
           >
             <ShoppingCart className="h-5 w-5" aria-hidden="true" />
             Adicionar ao carrinho

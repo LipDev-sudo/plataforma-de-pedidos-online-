@@ -136,7 +136,7 @@ export const menuItems: MenuItem[] = [
     description:
       "Cogumelos salteados, queijo taleggio, muçarela e tomilho fresco.",
     price: 62.9,
-    image: image("photo-1548365328-8b849e6f5a3f"),
+    image: image("photo-1590947132387-155cc02f3212"),
     category: "pizzas",
     prepTime: "30–40 min",
     customizations: [
@@ -181,7 +181,7 @@ export const menuItems: MenuItem[] = [
     description:
       "Massa de fermentação natural, alecrim, flor de sal e azeite extravirgem.",
     price: 24.9,
-    image: image("photo-1593280405106-e438ebe93f5b"),
+    image: image("photo-1586444248902-2f64eddc13df"),
     category: "entradas",
     prepTime: "12–18 min",
     customizations: [
@@ -200,7 +200,7 @@ export const menuItems: MenuItem[] = [
     description:
       "Burrata fresca, tomates assados, pesto de manjericão e pão da casa.",
     price: 38.9,
-    image: image("photo-1546549032-9571cd6b27df"),
+    image: image("photo-1592417817098-8fd3d9eb14a5"),
     category: "entradas",
     prepTime: "10–15 min",
   },

@@ -24,6 +24,7 @@ import {
 } from "../data/menu-data";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { restaurante } from "../../restaurante";
+import { Marcado } from "../components/Marcado";
 
 /** Ícone por categoria; categorias novas usam o ícone de talheres. */
 const categoryIcons: Record<string, typeof Pizza> = {
@@ -42,7 +43,7 @@ function CategoryLink({ category }: { category: Category }) {
   return (
     <Link
       to={`/menu?category=${category.id}`}
-      className="group flex min-w-[76px] flex-col items-center gap-2 border-b-2 border-transparent px-2 py-3 text-xs font-semibold text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary sm:min-w-[112px] sm:flex-row sm:justify-center"
+      className="group flex min-w-[76px] flex-col items-center gap-2 border-b-2 border-transparent px-2 py-3 text-xs font-semibold text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground sm:min-w-[112px] sm:flex-row sm:justify-center"
     >
       <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
       {category.name}
@@ -76,7 +77,7 @@ function MenuRow({
           <Link to={`/item/${item.id}`} className="min-w-0 py-2 -my-2">
             <h3 className="text-sm sm:text-base">{item.name}</h3>
           </Link>
-          <p className="shrink-0 text-sm font-bold">{formatCurrency(item.price)}</p>
+          <p className="shrink-0 text-sm font-medium">{formatCurrency(item.price)}</p>
         </div>
         <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
           {item.description}
@@ -90,7 +91,7 @@ function MenuRow({
             type="button"
             onClick={() => onAdd(item)}
             aria-label={`Adicionar ${item.name} ao carrinho`}
-            className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-xl border border-primary px-3 text-xs font-bold text-primary transition-colors hover:bg-primary hover:text-white"
+            className="flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-xl border border-foreground/40 px-3 text-xs font-medium text-foreground transition-colors hover:bg-primary hover:text-white"
           >
             <Plus className="h-4 w-4" aria-hidden="true" />
             <span className="hidden sm:inline">Adicionar</span>
@@ -107,15 +108,15 @@ function OrderSummary() {
   const total = getTotal();
 
   return (
-    <aside className="sticky top-24 rounded-2xl border border-border bg-white p-5 shadow-[0_12px_36px_rgba(35,31,27,0.07)]">
+    <aside className="sticky top-24 rounded-2xl border border-border bg-card p-5">
       <div className="flex items-center gap-2">
-        <ShoppingBag className="h-5 w-5 text-primary" strokeWidth={1.75} aria-hidden="true" />
+        <ShoppingBag className="h-5 w-5 text-foreground" strokeWidth={1.75} aria-hidden="true" />
         <h2 className="text-lg">Seu pedido</h2>
       </div>
 
       {items.length === 0 ? (
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Adicione itens para montar seu pedido em {restaurante.nome}.
+          Adicione itens do cardápio para montar seu pedido.
         </p>
       ) : (
         <div className="mt-4 space-y-3">
@@ -142,11 +143,11 @@ function OrderSummary() {
           <span className="text-sm text-muted-foreground">
             {count} {count === 1 ? "item" : "itens"}
           </span>
-          <span className="text-lg font-extrabold">{formatCurrency(total)}</span>
+          <span className="text-lg font-semibold">{formatCurrency(total)}</span>
         </div>
         <Link
           to="/cart"
-          className="mt-4 flex min-h-11 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white transition-colors hover:bg-[#a93622]"
+          className="mt-4 flex min-h-11 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)]"
         >
           Ver carrinho
         </Link>
@@ -185,7 +186,8 @@ export function HomePage() {
   return (
     <div className="pb-8 lg:pb-12">
       <section className="p-4 sm:p-6">
-        <div className="relative min-h-[224px] overflow-hidden rounded-2xl bg-[#241e19] sm:min-h-[280px]">
+        <Marcado rotulo="Sua foto de capa aqui" posicao="dentro" bloco>
+        <div className="relative min-h-[224px] overflow-hidden rounded-2xl bg-card sm:min-h-[280px]">
           <ImageWithFallback
             src={restaurante.capa}
             alt=""
@@ -193,13 +195,14 @@ export function HomePage() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/48 to-black/10" />
           <div className="relative flex min-h-[224px] max-w-xl flex-col justify-end p-5 text-white sm:min-h-[280px] sm:p-8">
-            <p className="text-sm font-semibold text-white/80">{restaurante.chamada}</p>
+            <p className="text-sm font-medium text-white/80">{restaurante.chamada}</p>
             <h1 className="mt-1 text-[2rem] text-white sm:text-[2.75rem]">{restaurante.nome}</h1>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-white/85 sm:text-base">
               {restaurante.descricao}
             </p>
           </div>
         </div>
+        </Marcado>
       </section>
 
       <section className="px-4 sm:px-6" aria-label="Busca e categorias">
@@ -215,7 +218,7 @@ export function HomePage() {
             placeholder="Buscar pizzas, entradas e bebidas"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
-            className="min-h-12 w-full rounded-xl border border-border bg-white pl-12 pr-4 text-sm shadow-sm outline-none transition focus:border-primary"
+            className="min-h-12 w-full rounded-xl border border-border bg-card pl-12 pr-4 text-sm shadow-sm outline-none transition focus:border-foreground/40"
           />
         </label>
 
@@ -240,7 +243,7 @@ export function HomePage() {
             {!normalizedQuery && (
               <Link
                 to="/menu?category=pizzas"
-                className="hidden shrink-0 items-center gap-1 text-sm font-bold text-primary sm:flex"
+                className="hidden shrink-0 items-center gap-1 text-sm font-medium text-foreground sm:flex"
               >
                 Ver todas
                 <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -249,11 +252,13 @@ export function HomePage() {
           </div>
 
           {visibleItems.length > 0 ? (
-            <div>
-              {visibleItems.map((item) => (
-                <MenuRow key={item.id} item={item} onAdd={handleAdd} />
-              ))}
-            </div>
+            <Marcado rotulo="Seu cardápio, fotos e preços aqui" posicao="direita" bloco>
+              <div>
+                {visibleItems.map((item) => (
+                  <MenuRow key={item.id} item={item} onAdd={handleAdd} />
+                ))}
+              </div>
+            </Marcado>
           ) : (
             <div className="py-14 text-center">
               <Pizza className="mx-auto h-8 w-8 text-muted-foreground" strokeWidth={1.5} />
@@ -267,7 +272,7 @@ export function HomePage() {
           {!normalizedQuery && (
             <Link
               to="/menu?category=pizzas"
-              className="mt-4 flex min-h-11 w-full items-center justify-center gap-1 rounded-xl border border-border bg-white text-sm font-bold text-foreground sm:hidden"
+              className="mt-4 flex min-h-11 w-full items-center justify-center gap-1 rounded-xl border border-border bg-card text-sm font-medium text-foreground sm:hidden"
             >
               Ver mais pizzas
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
