@@ -1,6 +1,7 @@
 import { CheckCircle2, ChevronRight, Clock3, Package, Truck } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useCart, type Order } from "../context/CartContext";
+import { restaurante } from "../../restaurante";
 
 const statusConfig = {
   preparando: {
@@ -28,7 +29,7 @@ export function OrderHistoryPage() {
   const navigate = useNavigate();
 
   const handleOrderAction = (order: Order) => {
-    if (order.status === "entregue") {
+    if (order.status === "entregue" || !restaurante.demonstracao) {
       repeatOrder(order.id);
       navigate("/cart");
       return;
@@ -44,7 +45,7 @@ export function OrderHistoryPage() {
         </div>
         <h1 className="mt-5">Nenhum pedido por aqui</h1>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          Seus pedidos demonstrativos aparecerão aqui depois da confirmação.
+          Seus pedidos aparecerão aqui depois da confirmação.
         </p>
         <button
           type="button"
@@ -62,7 +63,9 @@ export function OrderHistoryPage() {
       <div className="px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
         <h1>Seus pedidos</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Acompanhe a simulação de preparo e entrega do Forno da Vila.
+          {restaurante.demonstracao
+            ? `Acompanhe a simulação de preparo e entrega de ${restaurante.nome}.`
+            : `Pedidos enviados a ${restaurante.nome} neste aparelho. O andamento é informado pelo WhatsApp.`}
         </p>
       </div>
 
@@ -70,8 +73,9 @@ export function OrderHistoryPage() {
         {orders.map((order) => {
           const status = statusConfig[order.status];
           const StatusIcon = status.icon;
-          const actionLabel =
-            order.status === "preparando"
+          const actionLabel = !restaurante.demonstracao
+            ? "Pedir novamente"
+            : order.status === "preparando"
               ? "Simular saída"
               : order.status === "a caminho"
                 ? "Simular entrega"
@@ -87,12 +91,14 @@ export function OrderHistoryPage() {
                   <p className="text-sm font-bold">{order.id}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{order.date}</p>
                 </div>
-                <span
-                  className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold ${status.className}`}
-                >
-                  <StatusIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                  {status.label}
-                </span>
+                {restaurante.demonstracao && (
+                  <span
+                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold ${status.className}`}
+                  >
+                    <StatusIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                    {status.label}
+                  </span>
+                )}
               </div>
 
               <div className="mt-4 space-y-1 border-t border-border pt-4">

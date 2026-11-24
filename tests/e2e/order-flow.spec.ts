@@ -17,7 +17,7 @@ for (const viewport of viewports) {
     await page.evaluate(() => window.localStorage.clear());
     await page.reload();
 
-    await expect(page).toHaveTitle("Mesaora | Do cardápio ao pedido, direto.");
+    await expect(page).toHaveTitle("Forno da Vila | Cardápio com pedido pelo WhatsApp");
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/favicon.svg");
     await expect(page.getByRole("heading", { name: "Forno da Vila" })).toBeVisible();
 
@@ -41,6 +41,16 @@ for (const viewport of viewports) {
     await page.getByRole("button", { name: /Dinheiro/ }).click();
     await page.getByRole("button", { name: /Confirmar pedido/ }).click();
     await expect(page.getByRole("heading", { name: "Pedido confirmado" })).toBeVisible();
+
+    const whatsapp = new URL(
+      (await page.getByRole("link", { name: "Enviar pedido pelo WhatsApp" }).getAttribute("href")) ?? "",
+    );
+    expect(whatsapp.hostname).toBe("wa.me");
+    const mensagem = whatsapp.searchParams.get("text") ?? "";
+    expect(mensagem).toContain("1× Margherita da Vila");
+    expect(mensagem).toContain("Rua da Vila, 100");
+    expect(mensagem).toContain("Pagamento: Dinheiro");
+    expect(mensagem).toContain("Total: R$");
 
     await page.getByRole("button", { name: "Acompanhar pedido" }).click();
     await expect(page.getByText("Preparando")).toBeVisible();
