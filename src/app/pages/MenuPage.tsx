@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { categories, getItemsByCategory, menuItems } from "../data/menu-data";
+import { restaurante } from "../../restaurante";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -28,7 +29,7 @@ export function MenuPage() {
   return (
     <div className="pb-10">
       <div className="px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
-        <h1>Cardápio do Forno da Vila</h1>
+        <h1>Cardápio de {restaurante.nome}</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Pizzas de fermentação natural, entradas, sobremesas e bebidas preparadas
           para acompanhar o pedido.

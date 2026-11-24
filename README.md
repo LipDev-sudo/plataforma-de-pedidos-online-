@@ -76,6 +76,18 @@ Os testes percorrem o fluxo completo em `1440×900` e `390×844`, verificando pe
 | --- | --- |
 | ![Desktop](docs/screenshots/mesaora-desktop.png) | ![Mobile](docs/screenshots/mesaora-mobile.png) |
 
+## Implantação para um cliente
+
+O pedido é montado no site e enviado ao WhatsApp do restaurante, sem comissão por pedido e sem servidor próprio.
+
+1. Copie o repositório para um novo projeto do cliente.
+2. Em [`src/restaurante.ts`](src/restaurante.ts): troque `demonstracao` para `false` e preencha nome, marca, capa, `whatsapp` (só dígitos, com 55 e DDD), cores, taxa de entrega, formas de pagamento, SEO e rodapé. O `index.html` é preenchido a partir desse arquivo no build.
+3. Em [`src/app/data/menu-data.ts`](src/app/data/menu-data.ts): cadastre categorias (`categoryNames`) e itens, com fotos próprias do cliente em `public/`.
+4. Troque `public/favicon.svg` e, se houver, `robots.txt` e `sitemap.xml` pelo domínio do cliente.
+5. Rode `npm run typecheck && npm run lint && npm run build` e publique a pasta `dist/` numa hospedagem estática que permita uso comercial (por exemplo Cloudflare Pages; o plano gratuito da Vercel não permite). Configure o redirecionamento de todas as rotas para `index.html`.
+
+Com `demonstracao: false`, a simulação de preparo e entrega some: o andamento do pedido é combinado pelo WhatsApp. Os testes de ponta a ponta usam o cardápio de demonstração.
+
 ## Limites da demonstração
 
 - não há autenticação, API, banco de dados ou painel administrativo;

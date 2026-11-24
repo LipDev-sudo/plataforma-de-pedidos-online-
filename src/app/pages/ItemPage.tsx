@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { getItemById } from "../data/menu-data";
+import { restaurante } from "../../restaurante";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -80,7 +81,7 @@ export function ItemPage() {
 
         <section>
           <div className="rounded-2xl border border-border bg-white p-5 shadow-[0_8px_30px_rgba(35,31,27,0.05)] sm:p-6">
-            <p className="text-sm font-bold text-primary">Forno da Vila</p>
+            <p className="text-sm font-bold text-primary">{restaurante.nome}</p>
             <div className="mt-2 flex items-start justify-between gap-4">
               <h1>{item.name}</h1>
               <span className="shrink-0 text-xl font-extrabold">

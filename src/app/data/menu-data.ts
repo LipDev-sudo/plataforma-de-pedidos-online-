@@ -4,7 +4,8 @@ export interface MenuItem {
   description: string;
   price: number;
   image: string;
-  category: "pizzas" | "entradas" | "sobremesas" | "bebidas";
+  /** id de uma das categorias em `categoryNames`. */
+  category: string;
   prepTime: string;
   featured?: boolean;
   customizations?: Customization[];
@@ -21,12 +22,14 @@ export interface Category {
   itemCount: number;
 }
 
-export const categories: Category[] = [
-  { id: "pizzas", name: "Pizzas", itemCount: 6 },
-  { id: "entradas", name: "Entradas", itemCount: 2 },
-  { id: "sobremesas", name: "Sobremesas", itemCount: 2 },
-  { id: "bebidas", name: "Bebidas", itemCount: 2 },
-];
+
+/** Categorias do cardápio, na ordem de exibição. */
+const categoryNames: Record<string, string> = {
+  pizzas: "Pizzas",
+  entradas: "Entradas",
+  sobremesas: "Sobremesas",
+  bebidas: "Bebidas",
+};
 
 const image = (id: string) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=85`;
@@ -249,3 +252,7 @@ export const getItemsByCategory = (categoryId: string) =>
 
 export const getItemById = (id: string) =>
   menuItems.find((item) => item.id === id);
+
+export const categories: Category[] = Object.entries(categoryNames)
+  .map(([id, name]) => ({ id, name, itemCount: menuItems.filter((item) => item.category === id).length }))
+  .filter((category) => category.itemCount > 0);

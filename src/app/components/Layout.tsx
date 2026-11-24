@@ -2,6 +2,8 @@ import { MapPin } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
 import { BottomNav } from "./BottomNav";
 import { BrandMark } from "./BrandMark";
+import { SeloAchse } from "./SeloAchse";
+import { restaurante } from "../../restaurante";
 
 const desktopLinks = [
   { to: "/", label: "Início" },
@@ -59,24 +61,20 @@ export function Layout() {
 
       <footer className="border-t border-border bg-white pb-24 pt-6 lg:pb-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 text-center text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:text-left">
-          <p>Mesaora é uma demonstração. Nenhum pedido ou pagamento real é processado.</p>
-          <div className="flex justify-center gap-5">
-            <a
-              href="https://github.com/LipDev-sudo/plataforma-de-pedidos-online-"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-11 items-center font-semibold hover:text-primary"
-            >
-              Código
-            </a>
-            <a
-              href="https://lipdev.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-11 items-center font-semibold hover:text-primary"
-            >
-              Portfólio
-            </a>
+          <p>{restaurante.rodape.texto}</p>
+          <div className="flex flex-wrap items-center justify-center gap-5">
+            {restaurante.rodape.links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-11 items-center font-semibold hover:text-primary"
+              >
+                {link.rotulo}
+              </a>
+            ))}
+            {restaurante.selo && <SeloAchse />}
           </div>
         </div>
       </footer>

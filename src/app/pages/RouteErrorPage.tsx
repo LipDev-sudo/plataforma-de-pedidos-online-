@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router";
+import { restaurante } from "../../restaurante";
 
 export function RouteErrorPage() {
   const error = useRouteError();
@@ -31,7 +32,7 @@ export function NotFoundPage() {
       <p className="text-sm font-bold text-primary">Erro 404</p>
       <h1 className="mt-2">Página não encontrada</h1>
       <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-        O endereço acessado não faz parte da demonstração Mesaora.
+        O endereço acessado não existe em {restaurante.nome}.
       </p>
       <Link
         to="/"

@@ -9,28 +9,16 @@ import {
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { useCart, type Order } from "../context/CartContext";
+import { linkWhatsApp, mensagemDoPedido } from "../lib/whatsapp";
+import { restaurante, taxaDeEntrega, type FormaPagamento } from "../../restaurante";
 
-const paymentMethods = [
-  { id: "pix", label: "Pix", icon: Smartphone, description: "Pagamento instantâneo" },
-  {
-    id: "credit",
-    label: "Cartão de crédito",
-    icon: CreditCard,
-    description: "Visa, Mastercard ou Elo",
-  },
-  {
-    id: "debit",
-    label: "Cartão de débito",
-    icon: CreditCard,
-    description: "Pagamento na entrega",
-  },
-  {
-    id: "cash",
-    label: "Dinheiro",
-    icon: Banknote,
-    description: "Troco na entrega",
-  },
-];
+const icones: Record<FormaPagamento, typeof Smartphone> = {
+  pix: Smartphone,
+  credit: CreditCard,
+  debit: CreditCard,
+  cash: Banknote,
+};
+const paymentMethods = restaurante.pagamentos.map((p) => ({ ...p, icon: icones[p.id] }));
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -40,12 +28,12 @@ export function CheckoutPage() {
   const { items, getTotal, placeOrder } = useCart();
   const [address, setAddress] = useState("");
   const [complement, setComplement] = useState("");
-  const [payment, setPayment] = useState("pix");
+  const [payment, setPayment] = useState<string>(paymentMethods[0]?.id ?? "");
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
   const [addressError, setAddressError] = useState("");
 
   const subtotal = getTotal();
-  const deliveryFee = subtotal > 80 ? 0 : 8.9;
+  const deliveryFee = taxaDeEntrega(subtotal);
   const total = subtotal + deliveryFee;
 
   if (items.length === 0 && !confirmedOrder) {
@@ -74,21 +62,29 @@ export function CheckoutPage() {
         <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-success/10 text-success">
           <CheckCircle2 className="h-11 w-11" strokeWidth={1.7} aria-hidden="true" />
         </div>
-        <p className="mt-5 text-sm font-bold text-success">Pedido recebido</p>
+        <p className="mt-5 text-sm font-bold text-success">Pedido montado</p>
         <h1 className="mt-1">Pedido confirmado</h1>
         <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-          O pedido {confirmedOrder.id} entrou na fila demonstrativa do Forno da Vila.
+          Envie o pedido {confirmedOrder.id} pelo WhatsApp para {restaurante.nome} confirmar o preparo e a entrega.
         </p>
         <p className="mt-4 text-xl font-extrabold text-primary">
           {formatCurrency(confirmedOrder.total)}
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <a
+            href={linkWhatsApp(restaurante.whatsapp, mensagemDoPedido(confirmedOrder, restaurante.nome))}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center rounded-xl bg-success px-5 text-sm font-bold text-white"
+          >
+            Enviar pedido pelo WhatsApp
+          </a>
           <button
             type="button"
             onClick={() => navigate("/orders")}
-            className="min-h-11 rounded-xl bg-primary px-5 text-sm font-bold text-white"
+            className="min-h-11 rounded-xl border border-border bg-white px-5 text-sm font-bold"
           >
-            Acompanhar pedido
+            {restaurante.demonstracao ? "Acompanhar pedido" : "Ver pedidos"}
           </button>
           <button
             type="button"
@@ -116,7 +112,9 @@ export function CheckoutPage() {
         <div>
           <h1>Finalizar pedido</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Nenhum pagamento real será processado.
+            {restaurante.demonstracao
+              ? "Nenhum pagamento real será processado."
+              : "O pagamento é combinado com o restaurante pelo WhatsApp."}
           </p>
         </div>
       </div>
@@ -237,7 +235,7 @@ export function CheckoutPage() {
           <button
             type="button"
             onClick={handleOrder}
-            className="min-h-12 w-full rounded-xl bg-primary px-5 text-sm font-bold text-white transition-colors hover:bg-[#a93622]"
+            className="min-h-12 w-full rounded-xl bg-primary px-5 text-sm font-bold text-white transition-colors hover:bg-[var(--primary-hover)]"
           >
             Confirmar pedido · {formatCurrency(total)}
           </button>

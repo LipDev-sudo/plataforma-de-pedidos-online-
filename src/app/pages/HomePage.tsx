@@ -6,6 +6,7 @@ import {
   CupSoda,
   MapPin,
   Pizza,
+  UtensilsCrossed,
   Plus,
   Search,
   ShoppingBag,
@@ -22,8 +23,10 @@ import {
   type MenuItem,
 } from "../data/menu-data";
 import { ImageWithFallback } from "../components/ImageWithFallback";
+import { restaurante } from "../../restaurante";
 
-const categoryIcons = {
+/** Ícone por categoria; categorias novas usam o ícone de talheres. */
+const categoryIcons: Record<string, typeof Pizza> = {
   pizzas: Pizza,
   entradas: Wheat,
   sobremesas: CakeSlice,
@@ -34,7 +37,7 @@ const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function CategoryLink({ category }: { category: Category }) {
-  const Icon = categoryIcons[category.id];
+  const Icon = categoryIcons[category.id] ?? UtensilsCrossed;
 
   return (
     <Link
@@ -112,7 +115,7 @@ function OrderSummary() {
 
       {items.length === 0 ? (
         <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Adicione itens para montar seu pedido no Forno da Vila.
+          Adicione itens para montar seu pedido em {restaurante.nome}.
         </p>
       ) : (
         <div className="mt-4 space-y-3">
@@ -184,16 +187,16 @@ export function HomePage() {
       <section className="p-4 sm:p-6">
         <div className="relative min-h-[224px] overflow-hidden rounded-2xl bg-[#241e19] sm:min-h-[280px]">
           <ImageWithFallback
-            src="https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1800&q=88"
+            src={restaurante.capa}
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/48 to-black/10" />
           <div className="relative flex min-h-[224px] max-w-xl flex-col justify-end p-5 text-white sm:min-h-[280px] sm:p-8">
-            <p className="text-sm font-semibold text-white/80">Pizzaria artesanal de bairro</p>
-            <h1 className="mt-1 text-[2rem] text-white sm:text-[2.75rem]">Forno da Vila</h1>
+            <p className="text-sm font-semibold text-white/80">{restaurante.chamada}</p>
+            <h1 className="mt-1 text-[2rem] text-white sm:text-[2.75rem]">{restaurante.nome}</h1>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-white/85 sm:text-base">
-              Massa de fermentação natural, ingredientes selecionados e forno a lenha.
+              {restaurante.descricao}
             </p>
           </div>
         </div>

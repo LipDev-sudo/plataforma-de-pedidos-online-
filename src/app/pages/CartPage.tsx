@@ -2,6 +2,7 @@ import { ArrowRight, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ImageWithFallback } from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
+import { restaurante, taxaDeEntrega } from "../../restaurante";
 
 const formatCurrency = (value: number) =>
   value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -10,7 +11,7 @@ export function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCart();
   const navigate = useNavigate();
   const total = getTotal();
-  const deliveryFee = total > 80 ? 0 : 8.9;
+  const deliveryFee = taxaDeEntrega(total);
 
   if (items.length === 0) {
     return (
@@ -20,7 +21,7 @@ export function CartPage() {
         </div>
         <h1 className="mt-5">Seu carrinho está vazio</h1>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
-          Escolha uma pizza do Forno da Vila para começar seu pedido demonstrativo.
+          Escolha um item do cardápio de {restaurante.nome} para começar seu pedido.
         </p>
         <button
           type="button"
@@ -39,7 +40,7 @@ export function CartPage() {
       <div className="flex items-center justify-between px-4 pb-4 pt-6 sm:px-6 sm:pt-8">
         <div>
           <h1>Seu carrinho</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Pedido no Forno da Vila</p>
+          <p className="mt-1 text-sm text-muted-foreground">Pedido em {restaurante.nome}</p>
         </div>
         <button
           type="button"
