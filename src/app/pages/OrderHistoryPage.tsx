@@ -40,7 +40,7 @@ export function OrderHistoryPage() {
   if (orders.length === 0) {
     return (
       <div className="flex min-h-[65vh] flex-col items-center justify-center px-4 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-secondary text-primary">
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-secondary text-foreground">
           <Package className="h-9 w-9" strokeWidth={1.6} aria-hidden="true" />
         </div>
         <h1 className="mt-5">Nenhum pedido por aqui</h1>
@@ -50,7 +50,7 @@ export function OrderHistoryPage() {
         <button
           type="button"
           onClick={() => navigate("/menu")}
-          className="mt-6 min-h-11 rounded-xl bg-primary px-5 text-sm font-bold text-white"
+          className="mt-6 min-h-11 rounded-xl bg-primary px-5 text-sm font-medium text-white"
         >
           Explorar cardápio
         </button>
@@ -65,7 +65,7 @@ export function OrderHistoryPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           {restaurante.demonstracao
             ? `Acompanhe a simulação de preparo e entrega de ${restaurante.nome}.`
-            : `Pedidos enviados a ${restaurante.nome} neste aparelho. O andamento é informado pelo WhatsApp.`}
+            : "Pedidos enviados ao restaurante neste aparelho. O andamento é informado pelo WhatsApp."}
         </p>
       </div>
 
@@ -84,16 +84,16 @@ export function OrderHistoryPage() {
           return (
             <article
               key={order.id}
-              className="rounded-2xl border border-border bg-white p-5 shadow-[0_6px_22px_rgba(35,31,27,0.04)]"
+              className="rounded-2xl border border-border bg-card p-5"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-bold">{order.id}</p>
+                  <p className="text-sm font-medium">{order.id}</p>
                   <p className="mt-1 text-xs text-muted-foreground">{order.date}</p>
                 </div>
                 {restaurante.demonstracao && (
                   <span
-                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-bold ${status.className}`}
+                    className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium ${status.className}`}
                   >
                     <StatusIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     {status.label}
@@ -115,13 +115,13 @@ export function OrderHistoryPage() {
                   Pagamento: {order.paymentMethod}
                 </p>
                 <div className="mt-4 flex items-center justify-between gap-3">
-                  <p className="text-lg font-extrabold text-primary">
+                  <p className="text-lg font-semibold text-foreground">
                     {formatCurrency(order.total)}
                   </p>
                   <button
                     type="button"
                     onClick={() => handleOrderAction(order)}
-                    className="flex min-h-11 items-center gap-1 rounded-xl px-3 text-sm font-bold text-primary hover:bg-primary/5"
+                    className="flex min-h-11 items-center gap-1 rounded-xl px-3 text-sm font-medium text-foreground hover:bg-secondary"
                   >
                     {actionLabel}
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />

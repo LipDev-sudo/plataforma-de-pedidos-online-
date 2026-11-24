@@ -17,9 +17,9 @@ for (const viewport of viewports) {
     await page.evaluate(() => window.localStorage.clear());
     await page.reload();
 
-    await expect(page).toHaveTitle("Forno da Vila | Cardápio com pedido pelo WhatsApp");
+    await expect(page).toHaveTitle("Seu Restaurante | Cardápio com pedido pelo WhatsApp");
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/favicon.svg");
-    await expect(page.getByRole("heading", { name: "Forno da Vila" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Seu Restaurante" })).toBeVisible();
 
     const dimensions = await page.evaluate(() => ({
       documentWidth: document.documentElement.scrollWidth,

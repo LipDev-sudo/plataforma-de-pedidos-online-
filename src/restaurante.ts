@@ -8,6 +8,8 @@ export interface ConfigRestaurante {
   demonstracao: boolean;
   /** Nome do restaurante: aparece no cabeçalho, nas páginas e no título. */
   nome: string;
+  /** Logo (caminho a partir de public/). Sem logo, a demonstração mostra o espaço reservado. */
+  logo?: string;
   chamada: string;
   descricao: string;
   /** Imagem de capa da página inicial (URL ou caminho a partir de public/). */
@@ -28,8 +30,8 @@ export interface ConfigRestaurante {
 
 export const restaurante: ConfigRestaurante = {
   demonstracao: true,
-  nome: "Forno da Vila",
-  chamada: "Pizzaria artesanal de bairro",
+  nome: "Seu Restaurante",
+  chamada: "Pizzaria artesanal",
   descricao: "Massa de fermentação natural, ingredientes selecionados e forno a lenha.",
   capa: "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=1800&q=88",
   whatsapp: "",
@@ -44,7 +46,7 @@ export const restaurante: ConfigRestaurante = {
     { id: "cash", label: "Dinheiro", description: "Troco na entrega" },
   ],
   seo: {
-    titulo: "Forno da Vila | Cardápio com pedido pelo WhatsApp",
+    titulo: "Seu Restaurante | Cardápio com pedido pelo WhatsApp",
     descricao:
       "Demonstração Achse de cardápio digital: carrinho, opções por item, taxa de entrega e pedido enviado direto ao WhatsApp do restaurante, sem comissão.",
     url: "https://plataforma-de-pedidos-online-two.vercel.app/",

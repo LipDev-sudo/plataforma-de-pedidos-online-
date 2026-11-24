@@ -10,7 +10,7 @@ export function SeloAchse() {
       <img src="/achse/selo.png" alt="" width="32" height="32" className="h-8 w-8 rounded-full" />
       <span>
         <span className="block text-[0.6875rem] font-medium leading-none text-white/70">Desenvolvido por</span>
-        <span className="mt-0.5 block text-sm font-bold leading-none tracking-[0.08em]">ACHSE</span>
+        <span className="mt-0.5 block text-sm font-medium leading-none tracking-[0.08em]">ACHSE</span>
       </span>
     </a>
   );
